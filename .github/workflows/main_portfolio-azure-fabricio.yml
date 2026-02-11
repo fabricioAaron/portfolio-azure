@@ -22,9 +22,9 @@ jobs:
         uses: azure/login@v2
         with:
           with:
-              client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F7C9F811217F4B07A03916E25779B5A2 }}
-              tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2FFD7510C3A94CEDA0420B907083C70F }}
-              subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C55BAAEDBB8A40D2A99A03E98B6AB221 }}
+              client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F7C9F811217F4B07A03916E25779B5A2}}
+              tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2FFD7510C3A94CEDA0420B907083C70F}}
+              subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C55BAAEDBB8A40D2A99A03E98B6AB221}}
 
 
       - name: Deploy to Azure Web App
@@ -33,4 +33,5 @@ jobs:
           app-name: 'portfolio-azure-fabricio-win'
           slot-name: 'Production'
           package: .
+
 
