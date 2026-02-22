@@ -120,7 +120,7 @@ Comprobaremos que se haya sincronizado correctamente nuestro repositorio en wwwr
 <img width="886" height="263" alt="image" src="https://github.com/user-attachments/assets/3591fe64-e244-4a45-abc0-4ed3f6faeb5b" />
 <img width="1230" height="608" alt="image" src="https://github.com/user-attachments/assets/3dd03b62-5fe7-4bae-b450-e82f0bc50917" />
 
-10. Comprobar que los cambios en el repositorio  se comprueben automaticamente en la pagina web de azure. 
+10. Comprobar que los cambios en el repositorio  se han realizado automaticamente en la pagina web de azure. 
 
 <img width="886" height="509" alt="image" src="https://github.com/user-attachments/assets/6eac8177-a97a-4dec-a9c9-b29ea73775a2" />
 <img width="500" height="119" alt="image" src="https://github.com/user-attachments/assets/f1013d6d-ba8b-434d-b32e-33a170fdebfa" />
