@@ -40,17 +40,7 @@ Todo esto sin impacto en producción.
 
 ### Capa Híbrida
 
-Windows Server 2022 (VM en Azure)
-↓
-Azure File Sync Agent
-↓
-Azure Storage Account
-↓
-Azure File Share (companydata)
-
-El servidor actúa como caché.
-
-Azure es el almacenamiento real.
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/09c084a0-8b5b-4863-b6e0-9dcb82865794" />
 
 ---
 
@@ -162,7 +152,7 @@ Agregaremos a dominio
 
 Crear ruta local:
 
-D:\Shares\CompanyData
+D:\wscompany\CompanyData
 
 Compartirla como:
 
@@ -234,7 +224,7 @@ Add Server Endpoint
 
 Ruta:
 
-D:\Shares\CompanyData
+D:\wscompanydata\CompanyData
 
 Activar:Cloud Tiering: 
 
@@ -270,7 +260,7 @@ test.txt
 
 En:
 
-\fileserver\CompanyData
+ \\wscompanydata\CompanyData
 
 Verificar que aparece en:
 
@@ -282,11 +272,11 @@ Azure → File Share → companydata
 
 El usuario sigue usando:
 
-\fileserver\CompanyData
-
+ \\wscompanydata\CompanyData
 
 
 <img width="1086" height="262" alt="21" src="https://github.com/user-attachments/assets/4008130c-b0cb-4a5f-8ec4-9ee2fa04cad3" />
+
 
 
 
