@@ -42,22 +42,36 @@ Componentes principales:
 1. **Almacenamiento de PDFs**
    - Crear una Storage Account.
 
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/4.png)
 
+   - Crear un contenedor privado.
 
-   - Crear un contenedor privado (por ejemplo `politicas-pdf`).
+ ![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/5.png)
+ 
    - Subir los PDFs de políticas de empresa.
 
-
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/6.png)
 
 1. **Azure AI Search**
    - Crear un servicio de Azure AI Search (por ejemplo `search-politicas-empresa`).
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/7.png)
+
    - Usar el asistente **Import data** para:
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/8.png)
      - Origen: Azure Blob Storage → contenedor `politicas-pdf`.
      - Habilitar extracción de texto y habilidades cognitivas básicas.
      - Crear índice `idx-politicas` con:
        - Campo `key` (string) como clave.
        - Campo `content` marcado como `searchable` y `retrievable`.
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/9.png)
+
      - Crear y ejecutar el indexador (comprobar que el estado es `Success`).
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/10.png)
+
 
 2. **Proyecto en Azure AI Foundry**
    - Crear un AI Hub y un Proyecto en la misma región.
