@@ -60,6 +60,7 @@ Componentes principales:
    - Usar el asistente **Import data** para:
 
 ![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/8.png)
+
      - Origen: Azure Blob Storage → contenedor `politicas-pdf`.
      - Habilitar extracción de texto y habilidades cognitivas básicas.
      - Crear índice `idx-politicas` con:
