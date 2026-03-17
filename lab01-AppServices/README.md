@@ -2,7 +2,6 @@
 #APP SERVICES
 ## Pasos a seguir 
 
-- `lab-01-portfolio-azure-appservice/`  
   Portfolio estático (HTML/CSS) desplegado en Azure App Service, integrado con GitHub.
 
 1. Crear una carpeta en tu PC para el proyecto, por ejemplo portfolio-azure.
