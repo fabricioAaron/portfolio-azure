@@ -58,7 +58,7 @@ es necesario asegurar que sea resistente a ataques (WAF), que su estado de salud
 ### 2.1. Red (VNet y subred)
 
 1. `Crear un recurso` → **Virtual network**.
-   - Name: `app-gateway-web`.
+   - Name: `app-ip-address`.
    - Region: misma que el App Service.
    - Address space: `10.10.0.0/16`.
 
@@ -69,7 +69,7 @@ es necesario asegurar que sea resistente a ataques (WAF), que su estado de salud
 
 1. `Crear un recurso` → **Application Gateway**.
 2. Pestaña **Basics**:
-   - Name: `agw-cv-fabri`.
+   - Name: `app-gateway-web`.
    - Tier: **WAF v2**.
    - Autoscaling: activado, min 2 instancia.
    - WAF policy 
@@ -250,7 +250,6 @@ provoca que el 100% de las solicitudes sean rechazadas (http_req_failed 100%). L
 
 
 <img width="2116" height="743" alt="imagen" src="https://github.com/user-attachments/assets/999bc54a-7915-4e1b-9822-3b97e0be01d4" />
-/>
 
 
 ### Interpretacion 
@@ -287,7 +286,7 @@ todas las solicitudes de la misma IP quedan bloqueadas, lo que demuestra la efic
 
 - En un entorno real podrías añadir **TLS end-to-end**, dominios personalizados y reglas WAF adicionales (geolocalización, tamaños de cuerpo, etc.).  
 - Este laboratorio está pensado para que puedas hacer las pruebas, tomar capturas y destruir los recursos en menos de una hora de uso efectivo.
-# Laboratorio: Protección de un CV en Azure con App Service + Application Gateway WAF + k6
 
-Este README describe paso a paso cómo desplegar un CV en Azure, protegerlo con **Application Gateway WAF** y simular ataques con **k6**, recopilando evidencias gráficas para tu proyecto.
+
+
 
