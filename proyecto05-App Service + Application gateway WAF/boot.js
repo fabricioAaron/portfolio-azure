@@ -9,6 +9,6 @@ export default function () {
   const params = {
     headers: { 'User-Agent': 'BadBot/1.0' },
   };
-  // REEMPLAZA CON TU IP
-  http.get('http://4.177.16.203/', params);
+
+  http.get('http://4.177.16.203/', params);   // REEMPLAZA CON TU IP-Pública del forntend del Aplication Gateway
 }
