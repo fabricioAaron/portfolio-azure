@@ -7,7 +7,8 @@ export let options = {
 };
 
 export default function () {
-  // REEMPLAZA CON TU IP
-  http.get('http://4.177.16.203/');
+
+  http.get('http://4.177.16.203/'); // REEMPLAZA CON TU IP-Pública del forntend del Aplication Gateway
+}
   sleep(1);
 }
