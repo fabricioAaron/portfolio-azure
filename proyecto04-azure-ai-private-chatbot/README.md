@@ -4,10 +4,10 @@ Proyecto de asistente de IA donde su única fuente de información es le estable
 
 ## Objetivo del proyecto
 
-- Permitir que cualquier empleado haga preguntas relacionadas relacionadas en base a la documentación de la empresa y si son preguntas ajenas a ella el chatbot responderá que no tiene esa información. 
+- Permitir que cualquier empleado haga preguntas  relacionadas en base a la documentación de la empresa y si son preguntas ajenas a ella el chatbot responderá que no tiene esa información. 
 - Centralizar las políticas en Azure Storage y exponerlas a través de un asistente controlado.
 - Demostrar experiencia práctica con Azure AI Foundry, Azure AI Search y servicios de almacenamiento.
-- En este caso usamos azure blob storage y  documentación de la empresa, pero se puede integar AzureCosmos DB for mongo DB se podría consultar en el chatbot en función de la base de datos.
+- En este caso usamos azure blob storage y  documentación de la empresa, pero se puede integar AzureCosmos DB for mongo DB se podría consultar en el chatbot tomaría como fuente de alimentación de datos Cosmos DB.
 
 ## Arquitectura
 
@@ -17,13 +17,13 @@ Componentes principales:
   - Contiene los PDFs de políticas en un contenedor privado.
 
 - **Azure AI Search**  
-  - Indexa el contenido de los PDFs (campo `content` searchable).  
-  - Expone el índice `idx-politicas` para consultas semánticas.
+  - Indexa el contenido de los PDFs (campo "content" searchable).  
+  - Expone el índice "idx-politicas" para consultas semánticas.
 
 - **Azure AI Foundry**  
   - Proyecto que orquesta el agente de chat.  
-  - Implementación de un modelo LLM (p.ej. `gpt-4.1-mini` o similar).  
-  - Conexión al servicio `search-politicas-empresa` y al índice `idx-politicas` como origen de datos.
+  - Implementación de un modelo LLM (p.ej. "gpt-4.1-mini" o similar).  
+  - Conexión al servicio "search-politicas-empresa" y al índice "idx-politicas" como origen de datos.
 
 - **Área de juegos de chat (Chat Playground)**  
   - Interfaz para probar el asistente y hacer preguntas de negocio.
@@ -41,50 +41,150 @@ Componentes principales:
 
 1. **Almacenamiento de PDFs**
    - Crear una Storage Account.
+<br>
 
 
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/4.png)
 
-   - Crear un contenedor privado (por ejemplo `politicas-pdf`).
+<br>
+
+   - Crear un contenedor privado.
+<br>
+
+
+ ![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/5.png)
+ 
    - Subir los PDFs de políticas de empresa.
+<br>
 
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/6.png)
 
+<br>
 
 1. **Azure AI Search**
-   - Crear un servicio de Azure AI Search (por ejemplo `search-politicas-empresa`).
+   - Crear un servicio de Azure AI Search (por ejemplo "search-politicas-empresa").
+   
+<br>
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/7.png)
+
+
    - Usar el asistente **Import data** para:
-     - Origen: Azure Blob Storage → contenedor `politicas-pdf`.
-     - Habilitar extracción de texto y habilidades cognitivas básicas.
-     - Crear índice `idx-politicas` con:
-       - Campo `key` (string) como clave.
-       - Campo `content` marcado como `searchable` y `retrievable`.
-     - Crear y ejecutar el indexador (comprobar que el estado es `Success`).
+<br>
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/8.png)
+
+
+<br>
+
+
+  <p>  - Origen: Azure Blob Storage → contenedor "documents".</p>
+  <p>  - Habilitar extracción de texto y habilidades cognitivas básicas.</p>
+  <p>  - Crear índice "idx-politicas" con: </p>
+  <p>  - Campo "key" (string) como clave. </p>
+  <p>  - Campo "content" marcado como "searchable" y "retrievable". </p>
+
+<br>
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/9.png)
+
+<br>
+<p>
+     - Crear y ejecutar el indexador (comprobar que el estado es "Success").
+</p>     
+<br>
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/10.png)
+
+<br>
 
 2. **Proyecto en Azure AI Foundry**
    - Crear un AI Hub y un Proyecto en la misma región.
-   - En el catálogo de modelos, desplegar un modelo LLM (por ejemplo `gpt-4.1-mini` o `gpt-4o-mini`, según cuota).
+   
+<br>
+
+   ![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/1.png)
+   
+<br>
+
+   - En el catálogo de modelos, desplegar un modelo LLM (por ejemplo "gpt-4.1-mini" o "gpt-4o-mini", según cuota).
+   
+<br>
+
+   ![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/2.png)
+   
+<br>
+
+<br>
+
+   ![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/3.png)
+
+<br>
+
+
+<br>
+
    - En el *Centro de administración* del proyecto:
-     - Crear una **conexión** a `search-politicas-empresa` usando clave de administrador.
+     - Crear una **conexión** a "search-politicas-empresa" usando clave de administrador.
+     
    - En **Datos e índices**:
-     - Registrar el índice `idx-politicas` como origen de datos del proyecto.
+     - Registrar el índice "idx-politicas" como origen de datos del proyecto.
+     
+<br>
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/11.5.png)
+
+<br>
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/11.6.png)
+
+<br>
+
+  -  Despues de haber implementado, tendremos que ir a Mis recursos > Modelos + punto de conexión, allí agregaremos nuestras APIKEY automaticamente (blob storage + Azure AI search)
+  
+<br>
+
+  ![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/11.7.png)
+  
+   ![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/12.png)
+
+<br>   
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/13.png)
+
 
 3. **Configuración del agente de chat**
    - Crear un nuevo agente / chat en el área de juegos.
    - Seleccionar la implementación del modelo LLM.
-   - Añadir como origen de datos el índice de Azure AI Search (`search-politicas-empresa` + `idx-politicas`).
+   - Añadir como origen de datos el índice de Azure AI Search ("search-politicas-empresa" + "idx-politicas").
    - Mensaje de sistema recomendado:
+
 
      > “Eres el asistente de políticas internas de la empresa. Solo puedes responder utilizando la información de los documentos de políticas conectados.  
      > Si la información no está en los documentos, responde claramente que no está definida.”
 
-   - Ajustar creatividad baja y número de documentos recuperados (3–5).
+<br>     
+
+![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/14.png)
 
 4. **Pruebas**
    - Consultas de ejemplo:
-     - “Enumera todas las políticas de la empresa que aparecen en los documentos.”
-     - “¿Cuál es la política sobre vacaciones y días libres?”
+     - “Dime cuales son los permisos retribuidos y com ose solicitan y aparte comentame sobre cuales son los tipos de remuneración y beneficios de la empresa”
+  
    - Validar que:
-     - El asistente cita fragmentos que existen en los PDFs.
-     - Si algo no está definido, lo indica en lugar de inventar información.
+      - Toma la información exclusicavamente del pdf que esta almacenado en los contenedores. 
+
+<br>
+
+![imagen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/Captura%20de%20pantalla%202026-03-14%20204340.png)
+
+![imagen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/Captura%20de%20pantalla%202026-03-14%20204402.png)
+
+  - Si le hacemos una  consulta de algo muy global, nos dirá que no cuenta con esa información. 
+
+  ![iamgen](https://github.com/fabricioAaron/portfolio-azure/blob/main/proyecto04-azure-ai-private-chatbot/.github/images/test3.png)
+
+<br>
 
 ## Retos y soluciones
 
@@ -94,12 +194,7 @@ Componentes principales:
 - **Limitaciones de cuota en Azure OpenAI / cuenta de estudiante**  
   - Ajustar el tipo de implementación (Estándar global) y, si es necesario, usar modelos alternativos o suscripción de pago.
 
-## Posibles mejoras
 
-- Publicar una interfaz web (por ejemplo con Azure Static Web Apps) para que usuarios no técnicos accedan al bot.
-- Añadir autenticación (Azure AD) para limitar el acceso a empleados.
-- Métricas y logging detallado de consultas y documentos utilizados.
-- Integración con Microsoft Teams como bot corporativo.
 
 ## Cómo ejecutar / reproducir
 
@@ -109,6 +204,6 @@ Este proyecto se basa principalmente en recursos de Azure creados desde el porta
 2. Configurar el agente de chat con el mismo mensaje de sistema y origen de datos.  
 3. Probar desde el *Chat Playground* de Azure AI Foundry.
 
-> Nota: los nombres de recursos (`search-politicas-empresa`, `idx-politicas`, etc.) se pueden adaptar, siempre que se actualicen en las conexiones del proyecto.
+
 
 

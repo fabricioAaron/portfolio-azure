@@ -1,35 +1,7 @@
-# Laboratorios y proyectos Cloud · Fabricio Castillo
 
-Repositorio donde documento mis laboratorios y proyectos personales orientados a entornos cloud y multicloud.  
-Aquí concentro el trabajo práctico mi experiencia en el área de sistemas y acentando mis conocimientos de mi master Multicloud realizando proyectos en Azure.
-
-## Sobre mí
-
-- Profesional de Sistemas con background en ASIR y experiencia en soporte, administración y operación de infraestructuras.
-- Estudiante de máster en entornos multicloud, con foco en buenas prácticas, automatización y despliegue.
-- Certificado **Microsoft Azure Administrator Associate (AZ‑104)**, profundizando ahora en escenarios más prácticos y reales.
-- Certificado ** Azure Security Engineer Associate (AZ‑500)**, profundizando ahora en escenarios más prácticos y reales.
-
-Este repositorio nace con un objetivo claro: transformar conocimiento teórico en proyectos concretos que pueda explicar en una entrevista técnica o en una reunión con un equipo de ingeniería.
-
-## Qué encontrarás en este repositorio
-
-- **Labs de Azure**:  
-  - App Service, Web Apps y despliegue de aplicaciones.  
-  - Integración con GitHub / Azure DevOps y CI/CD.  
-  - Uso de servicios PaaS y recursos básicos (grupos de recursos, redes, almacenamiento, identidades).
-
-
-
-## Objetivo de estos proyectos
-
-- Afianzar conceptos de administración y operación en Azure más allá de la preparación de certificaciones.
-- Disponer de ejemplos reales que muestren cómo trabajo: cómo diseño, documento, despliego y mantengo servicios.
-- Construir un portfolio técnico que complemente mi perfil de sistemas y mi trayectoria hacia roles Cloud / DevOps / SRE.
-
+# APP SERVICES
 ## Pasos a seguir 
 
-- `lab-01-portfolio-azure-appservice/`  
   Portfolio estático (HTML/CSS) desplegado en Azure App Service, integrado con GitHub.
 
 1. Crear una carpeta en tu PC para el proyecto, por ejemplo portfolio-azure.
