@@ -1,4 +1,4 @@
-# Laboratorio: Protección de un CV en Azure con App Service + Application Gateway WAF + k6
+# Laboratorio:  Application Gateway WAF 
 
 El objetivo de este despliegue es demostrar la capacidad de proteger aplicaciones críticas en la nube. No basta con subir una web; 
 es necesario asegurar que sea resistente a ataques (WAF), que su estado de salud sea monitoreado constantemente.
@@ -20,10 +20,16 @@ es necesario asegurar que sea resistente a ataques (WAF), que su estado de salud
    - Region: `Norway East` 
    - Plan: el más pequeño disponible (Free/Basic).
 
+<br>
+
    <img width="558" height="769" alt="1" src="https://github.com/user-attachments/assets/f171e704-5ad6-458a-bcdd-52b483d0930f" />
+
+<br>
 
 <img width="921" height="496" alt="Captura de pantalla 2026-04-05 042149" src="https://github.com/user-attachments/assets/d20353a2-6362-4625-b684-cfc6ecf767f2" />
 
+
+<br>
 
 2. Subir el `index.html`:
    - Ir al Web App → **Development ** → `filex` → `.zip`.
@@ -31,8 +37,11 @@ es necesario asegurar que sea resistente a ataques (WAF), que su estado de salud
      `https://cv-app-fabri-XXXX.azurewebsites.net/`  
      muestra tu CV.
 
+<br>
+
 <img width="1600" height="784" alt="2" src="https://github.com/user-attachments/assets/3a554b34-c369-49a4-a107-6ef2654e48ff" />
 
+<br>
 
 - Pantalla de **Overview** del Web App, mostrando:
   - `Default domain` (`cv-app-fabri-XXXX.azurewebsites.net`).
@@ -66,15 +75,22 @@ es necesario asegurar que sea resistente a ataques (WAF), que su estado de salud
    - WAF policy 
    - Virtual network: `vnet-appgw-cv`.
    - Subnet: `subnet-appgw`.
+
+<br>
   
 <img width="777" height="763" alt="Captura de pantalla 2026-04-05 023819" src="https://github.com/user-attachments/assets/c948ac23-271d-4238-9f71-5fec58612e62" />
+
+<br>
 
 3. **Frontend**:
    - Tipo: **Public**.
    - Nueva IP pública: `ip-public.web`.
 
+<br>
+
 <img width="772" height="269" alt="4" src="https://github.com/user-attachments/assets/dea41df9-19a9-452b-8fb3-3cc13187c527" />
 
+<br>
 
 4. **Backend pool**:
    - Name: `bp-cv-app`.
@@ -123,7 +139,9 @@ Crear y esperar a que se complete la implementación.
 
 <br>
 
-Podremos ver en **Frontendip** la ip pública 
+### Importante
+
+Podremos ver en **Frontendip** la ip pública (esto es la ip pública con lo que los clientes pueden acceder y también nos servirá para hacer los test )
 
 <img width="409" height="325" alt="7" src="https://github.com/user-attachments/assets/72e90542-e56b-4b29-b245-9eabf2dc65f1" />
 
@@ -170,6 +188,7 @@ inspecciona cada paquete de datos antes de que llegue a nuestra web. Protege con
 
 
 Interpretación:
+
 <p>
     Cualquier petición que lleve User-Agent: ...BadBot... será considerada sospechosa y se bloqueará (403), según la acción que hayas definido en la custom rule.
     Esto encaja con el script test-badbot-agw.js de k6: todas esas peticiones deberían contar como fallidas (403) y nunca llegar al backend.
@@ -216,6 +235,8 @@ Haremos testeos:
 
 <img width="2116" height="743" alt="imagen" src="https://github.com/user-attachments/assets/47a2575d-815a-4d27-9103-db54d3585243" />
 
+### Interpretacion 
+
 “En el escenario de ataque intenso (boot.js, 10 VUs, ~6000 peticiones en 60 s), la combinación de la regla de User‑Agent Block‑BadBot y la regla de rate‑limit AtaqueDDoS provoca que el 100% de las solicitudes sean rechazadas (http_req_failed 100%). La latencia media de ~50 ms indica que el WAF corta el tráfico en el borde, sin llegar al backend.”“En el escenario de ataque intenso (boot.js, 10 VUs, ~6000 peticiones en 60 s), la combinación de la regla de User‑Agent Block‑BadBot y la regla de rate‑limit AtaqueDDoS 
 provoca que el 100% de las solicitudes sean rechazadas (http_req_failed 100%). La latencia media de ~50 ms indica que el WAF corta el tráfico en el borde, sin llegar al backend.”
 
@@ -229,6 +250,10 @@ provoca que el 100% de las solicitudes sean rechazadas (http_req_failed 100%). L
 
 
 <img width="2116" height="743" alt="imagen" src="https://github.com/user-attachments/assets/999bc54a-7915-4e1b-9822-3b97e0be01d4" />
+/>
+
+
+### Interpretacion 
 
 “En la prueba de carga leve (test‑suave‑agw.js, 5 VUs y 145 solicitudes), las reglas WAF siguen devolviendo un 100% de peticiones fallidas. Esto se debe a que la regla de rate‑limit AtaqueDDoS está aplicada al rango completo 0.0.0.0/0 con un umbral muy bajo (20 requests/min por IP). Tras superar este valor, 
 todas las solicitudes de la misma IP quedan bloqueadas, lo que demuestra la eficacia del control pero también muestra el riesgo de configurar un límite demasiado agresivo.”
@@ -252,37 +277,9 @@ todas las solicitudes de la misma IP quedan bloqueadas, lo que demuestra la efic
 **Captura sugerida**
 
 - Gráfica de `Total Requests` mostrando un pico y distribución por códigos 2xx/4xx.
+  
+<img width="778" height="351" alt="imagen" src="https://github.com/user-attachments/assets/9eef1df2-ae47-4504-a9ee-6ae3279bcb99" />
 
-> _[Insertar aquí captura de métricas]_  
-
-### 5.2. Topología de red (Network Watcher)
-
-1. Activar **Network Watcher** en la región (si no lo está).
-2. Ir a `Network Watcher` → `Topology`.
-3. Seleccionar el Resource group `RG_App`.
-4. Verás:
-   - IP pública del Application Gateway.
-   - Application Gateway.
-   - App Service (o integración equivalente).
-
-**Captura sugerida**
-
-- Mapa de topología mostrando flujo: IP pública → Application Gateway → App Service.
-
-> _[Insertar aquí captura de topología]_  
-
----
-
-## Limpieza del laboratorio
-
-Para no seguir incurriendo en costes:
-
-1. Detener y eliminar:
-   - Application Gateway.
-   - IP pública asociada.
-   - VNet `vnet-appgw-cv`.
-   - App Service `cv-app-fabri` y su App Service Plan (si solo lo usas para este lab).
-2. Verificar en `Cost Management` que el gasto se ha detenido.
 
 ---
 
