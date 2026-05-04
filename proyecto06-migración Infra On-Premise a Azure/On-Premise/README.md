@@ -35,6 +35,7 @@ El entorno se usa para practicar administración de sistemas, copias de segurida
 ## Hipervisor VMware ESXi
 
 ### Arquitectura general
+<img width="1821" height="590" alt="imagen" src="https://github.com/user-attachments/assets/0c8f365b-78cf-400c-97cc-1dddf8473552" />
 
 **Capa física / host**
 
@@ -43,6 +44,8 @@ El entorno se usa para practicar administración de sistemas, copias de segurida
 - Hipervisor nested: VMware ESXi 8.0.3.
 - IP de gestión ESXi (estática): `192.168.1.139`.
 
+<img width="1011" height="491" alt="1" src="https://github.com/user-attachments/assets/6e31dd16-03e8-4b3c-b17a-4de23eed7ea0" />
+
 **Red**
 
 - Rango de red: `192.168.1.0/24`.
@@ -50,27 +53,80 @@ El entorno se usa para practicar administración de sistemas, copias de segurida
 - Port group: `Lan-Servers` (VLAN ID 0).
 - Todas las VMs están conectadas al port group `Lan-Servers`.
 
+<img width="802" height="541" alt="2" src="https://github.com/user-attachments/assets/ba49a047-9091-4190-b38e-1d91aeec571f" />
+
+<img width="1226" height="269" alt="3" src="https://github.com/user-attachments/assets/c4b956e7-4637-44ed-bc2b-e32050005fdc" />
 
 ---
 ## Servidor de Directorio Activo, DNS y Carpeta compartida
 
-## 4. Detalle de cada servidor
+### 1. Información general
 
-### 4.1. Servidor AD (Directorio Activo y DNS)
+- Nombre del servidor: `AD.template.local`
+- Rol: Controlador de dominio, servidor DNS y servidor de ficheros.
+- Dominio: `template.local`
+- Usuarios, grupos y recursos organizados mediante Unidades Organizativas (OU).
 
-- Dominio: `template.local`.
-- Funciones:
-  - Controlador de dominio (usuarios y equipos).
-  - Servidor DNS principal para el dominio.
-  - Carpeta compartida `\\AD\shares` para almacenar copias de seguridad y ficheros de prueba.
-- Configuración de red:
-  - IP estática: `192.168.1.10`.
-  - DNS preferido: `192.168.1.10` (se apunta a sí mismo).
+### 2. Estructura de Active Directory
 
-Uso típico:
-- Crear usuarios y grupos de prueba.
-- Asignar permisos sobre la carpeta `shares`.
-- Comprobar resolución de nombres de `APP`, `RabbitMQ` y `veeam`.
+Se ha creado la siguiente estructura básica de OUs:
+
+- `template.local`
+  - `Departamentos`
+  - `Usuarios`
+  - `Recursos`
+    - `Shares`
+
+La OU **Departamentos** agrupa los grupos de seguridad por área de la empresa.[file:57]  
+La OU **Usuarios** contiene las cuentas de usuario finales que se usan en el laboratorio.[file:56]
+
+### 3. Grupos de seguridad por departamento
+
+Dentro de la OU `Departamentos` se han creado los siguientes grupos de seguridad de tipo global:
+
+- `grupos_finanzas`
+- `grupos_RRHH`
+- `grupos_ventas`[file:57]
+
+Estos grupos representan a los departamentos de la organización y se utilizan para asignar permisos de acceso a recursos compartidos.
+
+### 4. Usuarios de dominio
+
+En la OU `Usuarios` se han creado usuarios de ejemplo, por ejemplo:
+
+- `Ana Lopez`
+- `Carlos Ruiz`
+- `Juan Peres`
+- `Maria Gomez`[file:56]
+
+Cada usuario pertenece al grupo predeterminado **Domain Users** y, adicionalmente, al grupo de su departamento.  
+En el ejemplo mostrado, el usuario **Ana Lopez** es miembro de:
+
+- `Domain Users`
+- `grupos_finanzas` (ubicado en `template.local/Departamentos`)[file:56]
+
+Esto permite controlar el acceso a recursos basados en el departamento al que pertenece cada usuario.
+
+### 5. Grupos para acceso a carpetas compartidas
+
+En la OU `Recursos` → `Shares` se han creado grupos de seguridad específicos para controlar el acceso a cada carpeta compartida:
+
+- `DL_carpeta_compartida_Finanzas`
+- `DL_carpeta_compartida_RRHH`
+- `DL_carpeta_compartida_Ventas`[file:58]
+
+Cada uno de estos grupos tiene como miembros al grupo de departamento correspondiente.  
+Por ejemplo:
+
+- `DL_carpeta_compartida_Finanzas` incluye como miembro al grupo `grupos_finanzas`.[file:58]
+
+De esta forma se aplica el modelo **AGDLP** (Accounts → Global Groups → Domain Local Groups → Permissions):  
+las cuentas de usuario se añaden a grupos globales de departamento, y estos grupos globales se añaden a grupos de dominio locales que se usan para asignar permisos sobre las carpetas compartidas.
+
+### 6. Uso previsto
+
+- Asignar permisos NTFS y de recurso compartido sobre las carpetas del servidor de ficheros utilizando los grupos `DL_carpeta_compartida_*`.  
+- Permitir que solo los usuarios del departamento correspondiente (Finanzas, RRHH, Ventas) accedan a su carpeta y a los datos protegidos por Veeam.
 
 ### 4.2. Servidor APP (.NET + SQL Server)
 
