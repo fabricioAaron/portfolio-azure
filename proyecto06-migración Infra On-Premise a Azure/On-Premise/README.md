@@ -26,22 +26,15 @@ El entorno se usa para practicar administración de sistemas, copias de segurida
 ## Índice de la infraestructura
 
 1. [Hipervisor VMware ESXi](#hipervisor-vmware-esxi)
-2. [Servidor de Directorio Activo + DNS + Carpeta compartida ](#servidor-de-directorio-activo-dns)
+2. [Servidor de Directorio Activo, DNS y Carpeta compartida](#servidor-de-directorio-activo-dns-y-carpeta-compartida)
 3. [Servidor de Aplicaciones (.NET + SQL Server)](#servidor-de-aplicaciones-net--sql-server)
 4. [Servidor de Mensajería (Ubuntu + RabbitMQ)](#servidor-de-mensajeria-ubuntu--rabbitmq)
 5. [Servidor de Copias de Seguridad (Veeam)](#servidor-de-copias-de-seguridad-veeam)
 
 
-## ESXi Hypervisor 
+## Hipervisor VMware ESXi
 
-
-# proyecto VMware ESXi – Entorno AD + APP + RabbitMQ + Veeam
-
-
----
-##  Servidor de Directorio Activo y DNS
-
-## 2. Arquitectura general
+### Arquitectura general
 
 **Capa física / host**
 
@@ -58,6 +51,7 @@ El entorno se usa para practicar administración de sistemas, copias de segurida
 - Todas las VMs están conectadas al port group `Lan-Servers`.
 
 ---
+## Servidor de Directorio Activo, DNS y Carpeta compartida
 
 ## 3. Inventario de máquinas virtuales
 
