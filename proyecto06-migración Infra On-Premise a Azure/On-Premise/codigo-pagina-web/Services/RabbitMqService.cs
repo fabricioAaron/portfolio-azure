@@ -14,8 +14,8 @@ namespace MiWebAPP.Services
             {
                 HostName = "192.168.1.130",
                 Port = 5672,
-                UserName = "admin",
-                Password = "admin"
+                UserName = "***",
+                Password = "****"
             };
         }
 
