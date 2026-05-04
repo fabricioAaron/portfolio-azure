@@ -60,6 +60,8 @@ El entorno se usa para practicar administración de sistemas, copias de segurida
 ---
 ## Servidor de Directorio Activo, DNS y Carpeta compartida
 
+<img width="1538" height="581" alt="4" src="https://github.com/user-attachments/assets/c22bdcec-0316-4d3c-95b2-5529be8126f6" />
+
 ### 1. Información general
 
 - Nombre del servidor: `AD.template.local`
@@ -77,8 +79,10 @@ Se ha creado la siguiente estructura básica de OUs:
   - `Recursos`
     - `Shares`
 
-La OU **Departamentos** agrupa los grupos de seguridad por área de la empresa.[file:57]  
-La OU **Usuarios** contiene las cuentas de usuario finales que se usan en el laboratorio.[file:56]
+La OU **Departamentos** agrupa los grupos de seguridad por área de la empresa.
+La OU **Usuarios** contiene las cuentas de usuario finales que se usan en el laboratorio.
+
+<img width="714" height="282" alt="6" src="https://github.com/user-attachments/assets/847833bf-daaf-49cd-860a-0e2f850d6c97" />
 
 ### 3. Grupos de seguridad por departamento
 
@@ -86,7 +90,7 @@ Dentro de la OU `Departamentos` se han creado los siguientes grupos de seguridad
 
 - `grupos_finanzas`
 - `grupos_RRHH`
-- `grupos_ventas`[file:57]
+- `grupos_ventas`
 
 Estos grupos representan a los departamentos de la organización y se utilizan para asignar permisos de acceso a recursos compartidos.
 
@@ -97,13 +101,14 @@ En la OU `Usuarios` se han creado usuarios de ejemplo, por ejemplo:
 - `Ana Lopez`
 - `Carlos Ruiz`
 - `Juan Peres`
-- `Maria Gomez`[file:56]
+- `Maria Gomez`
+<img width="801" height="377" alt="7" src="https://github.com/user-attachments/assets/a3ec04d7-16ed-482e-92e1-a5338791950b" />
 
 Cada usuario pertenece al grupo predeterminado **Domain Users** y, adicionalmente, al grupo de su departamento.  
 En el ejemplo mostrado, el usuario **Ana Lopez** es miembro de:
 
 - `Domain Users`
-- `grupos_finanzas` (ubicado en `template.local/Departamentos`)[file:56]
+- `grupos_finanzas` (ubicado en `template.local/Departamentos`)
 
 Esto permite controlar el acceso a recursos basados en el departamento al que pertenece cada usuario.
 
@@ -113,15 +118,20 @@ En la OU `Recursos` → `Shares` se han creado grupos de seguridad específicos 
 
 - `DL_carpeta_compartida_Finanzas`
 - `DL_carpeta_compartida_RRHH`
-- `DL_carpeta_compartida_Ventas`[file:58]
+- `DL_carpeta_compartida_Ventas`
 
 Cada uno de estos grupos tiene como miembros al grupo de departamento correspondiente.  
 Por ejemplo:
 
-- `DL_carpeta_compartida_Finanzas` incluye como miembro al grupo `grupos_finanzas`.[file:58]
+- `DL_carpeta_compartida_Finanzas` incluye como miembro al grupo `grupos_finanzas`.
+
+<img width="360" height="310" alt="8 5" src="https://github.com/user-attachments/assets/bc783399-f932-4c35-ab95-ece9f9eec027" />
+
 
 De esta forma se aplica el modelo **AGDLP** (Accounts → Global Groups → Domain Local Groups → Permissions):  
 las cuentas de usuario se añaden a grupos globales de departamento, y estos grupos globales se añaden a grupos de dominio locales que se usan para asignar permisos sobre las carpetas compartidas.
+
+<img width="762" height="288" alt="8" src="https://github.com/user-attachments/assets/bd0ba32f-70cb-473b-a675-cb8df6fa0778" />
 
 ### 6. Uso previsto
 
