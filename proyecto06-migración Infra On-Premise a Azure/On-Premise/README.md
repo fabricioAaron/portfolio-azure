@@ -138,7 +138,7 @@ las cuentas de usuario se añaden a grupos globales de departamento, y estos gru
 - Asignar permisos NTFS y de recurso compartido sobre las carpetas del servidor de ficheros utilizando los grupos `DL_carpeta_compartida_*`.  
 - Permitir que solo los usuarios del departamento correspondiente (Finanzas, RRHH, Ventas) accedan a su carpeta y a los datos protegidos por Veeam.
 
-### 4.2. Servidor APP (.NET + SQL Server)
+## Servidor de Aplicaciones (.NET + SQL Server)
 
 - Miembro del dominio `template.local`.
 - Servicios:
