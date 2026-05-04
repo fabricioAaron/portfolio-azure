@@ -50,20 +50,9 @@ El entorno se usa para practicar administración de sistemas, copias de segurida
 - Port group: `Lan-Servers` (VLAN ID 0).
 - Todas las VMs están conectadas al port group `Lan-Servers`.
 
+
 ---
 ## Servidor de Directorio Activo, DNS y Carpeta compartida
-
-## 3. Inventario de máquinas virtuales
-
-| Nombre VM | Hostname               | SO invitado                 | vCPU | RAM | Disco aprox. | IP             | Rol principal                    |
-|-----------|------------------------|-----------------------------|------|-----|--------------|----------------|----------------------------------|
-| AD        | `AD.template.local`    | Windows Server (AD/DNS)     | 2    | 4 GB | 40–50 GB     | 192.168.1.10   | Controlador de dominio + DNS + share `\\AD\shares` |
-| APP       | `APP.template.local`   | Windows Server (.NET + SQL) | 2    | 4 GB | ~70 GB       | 192.168.1.20   | Aplicación web .NET + SQL `reservas` |
-| RabbitMQ  | `fabri` (por defecto)  | Ubuntu Server 64 bits       | 1  | 2 GB | ~12 GB       | 192.168.1.30   | Servidor RabbitMQ (Docker)      |
-| veeam     | `veeam.template.local` | Windows Server              | 2    | 4 GB | ~144 GB      | 192.168.1.40   | Veeam Backup & Replication       |
-
-
----
 
 ## 4. Detalle de cada servidor
 
