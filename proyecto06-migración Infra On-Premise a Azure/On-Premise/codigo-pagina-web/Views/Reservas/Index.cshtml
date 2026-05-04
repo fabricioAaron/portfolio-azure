@@ -1,0 +1,43 @@
+﻿@model IEnumerable<MiWebAPP.Models.Reserva>
+
+<section class="py-10 px-6 bg-black min-h-screen text-white">
+    <div class="max-w-5xl mx-auto">
+        <h2 class="text-3xl font-bold mb-6">Panel de reservas</h2>
+
+        @if (TempData["Mensaje"] != null)
+        {
+            <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
+                @TempData["Mensaje"]
+            </div>
+        }
+
+        <table class="min-w-full bg-white text-black rounded overflow-hidden">
+            <thead class="bg-gray-800 text-white">
+                <tr>
+                    <th class="px-4 py-2 text-left">Nombre</th>
+                    <th class="px-4 py-2 text-left">Email</th>
+                    <th class="px-4 py-2 text-left">Fecha</th>
+                    <th class="px-4 py-2 text-left">Aventura</th>
+                    <th class="px-4 py-2 text-left">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr class="border-b">
+                        <td class="px-4 py-2">@r.Nombre</td>
+                        <td class="px-4 py-2">@r.Email</td>
+                        <td class="px-4 py-2">@r.FechaReserva</td>
+                        <td class="px-4 py-2">@r.TipoAventura</td>
+                        <td class="px-4 py-2 space-x-2">
+                            <a asp-controller="Reservas" asp-action="Editar" asp-route-id="@r.Id"
+                               class="text-blue-500 hover:underline">Editar</a>
+                            <a asp-controller="Reservas" asp-action="Eliminar" asp-route-id="@r.Id"
+                               class="text-red-500 hover:underline">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

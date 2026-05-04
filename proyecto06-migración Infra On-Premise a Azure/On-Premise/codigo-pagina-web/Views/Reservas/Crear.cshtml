@@ -1,0 +1,45 @@
+﻿@model MiWebAPP.Models.Reserva
+
+@{
+    ViewData["Title"] = "Crear Reserva";
+}
+<h1 style="color:red">ESTA ES LA VISTA CORRECTA</h1>
+
+<h2>Crear Reserva</h2>
+
+<form asp-action="Crear" method="post">
+
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FechaReserva"></label>
+        <input asp-for="FechaReserva" type="datetime-local" class="form-control" />
+        <span asp-validation-for="FechaReserva" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TipoAventura"></label>
+        <select asp-for="TipoAventura" class="form-control">
+            <option value="">-- Selecciona una aventura --</option>
+            <option value="Escalada">Escalada</option>
+            <option value="Senderismo">Senderismo</option>
+            <option value="Kayak">Kayak</option>
+            <option value="Parapente">Parapente</option>
+        </select>
+        <span asp-validation-for="TipoAventura" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Crear</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Volver</a>
+
+</form>

@@ -1,0 +1,35 @@
+﻿@model MiWebAPP.Models.Reserva
+
+<section class="py-10 px-6 bg-black min-h-screen text-white">
+    <div class="max-w-xl mx-auto">
+        <h2 class="text-3xl font-bold mb-6">Editar reserva</h2>
+
+        <form asp-action="Editar" method="post" class="space-y-4">
+            <input type="hidden" asp-for="Id" />
+
+            <div>
+                <label class="block mb-1">Nombre</label>
+                <input asp-for="Nombre" class="w-full border p-3 rounded text-black" />
+            </div>
+
+            <div>
+                <label class="block mb-1">Email</label>
+                <input asp-for="Email" class="w-full border p-3 rounded text-black" />
+            </div>
+
+            <div>
+                <label class="block mb-1">Fecha de reserva</label>
+                <input asp-for="FechaReserva" type="datetime-local" class="w-full border p-3 rounded text-black" />
+            </div>
+
+            <div>
+                <label class="block mb-1">Tipo de aventura</label>
+                <input asp-for="TipoAventura" class="w-full border p-3 rounded text-black" />
+            </div>
+
+            <button type="submit" class="bg-blue-700 text-white px-6 py-3 rounded font-bold">
+                Guardar cambios
+            </button>
+        </form>
+    </div>
+</section>

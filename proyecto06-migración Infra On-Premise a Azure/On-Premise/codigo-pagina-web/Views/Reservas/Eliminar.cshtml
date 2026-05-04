@@ -1,0 +1,24 @@
+﻿@model MiWebAPP.Models.Reserva
+
+<section class="py-10 px-6 bg-black min-h-screen text-white">
+    <div class="max-w-xl mx-auto">
+        <h2 class="text-3xl font-bold mb-6">Eliminar reserva</h2>
+
+        <p class="mb-4">¿Seguro que quieres eliminar esta reserva?</p>
+
+        <ul class="mb-4">
+            <li><strong>Nombre:</strong> @Model.Nombre</li>
+            <li><strong>Email:</strong> @Model.Email</li>
+            <li><strong>Fecha:</strong> @Model.FechaReserva</li>
+            <li><strong>Aventura:</strong> @Model.TipoAventura</li>
+        </ul>
+
+        <form asp-action="EliminarConfirmado" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="bg-red-700 text-white px-6 py-3 rounded font-bold mr-2">
+                Eliminar
+            </button>
+            <a asp-action="Index" class="text-blue-400 hover:underline">Cancelar</a>
+        </form>
+    </div>
+</section>

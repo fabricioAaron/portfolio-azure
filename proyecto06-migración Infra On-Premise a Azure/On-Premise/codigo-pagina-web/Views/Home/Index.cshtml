@@ -1,0 +1,189 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<header class="relative h-screen flex items-center justify-center overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1533719071182-1828ee391580?auto=format&fit=crop&q=80&w=2000" class="absolute w-full h-full object-cover" alt="Rafting en Ayacucho">
+    <div class="absolute inset-0 hero-overlay"></div>
+
+    <div class="relative z-10 text-center px-4 max-w-4xl">
+        <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 inline-block w-full">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">
+                Rafting y aventuras guiadas en Ayacucho
+            </h1>
+            <p class="text-xl text-white/90 mb-8">
+                Viví una experiencia segura, emocionante e inolvidable — aunque sea tu primera vez.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-4 mb-8 text-white text-sm font-medium">
+                <span class="bg-white/20 px-4 py-1 rounded-full border border-white/30"><i class="fas fa-trophy mr-2"></i>+30 años de experiencia</span>
+                <span class="bg-white/20 px-4 py-1 rounded-full border border-white/30"><i class="fas fa-certificate mr-2"></i>Guías certificados</span>
+                <span class="bg-white/20 px-4 py-1 rounded-full border border-white/30"><i class="fas fa-shield-alt mr-2"></i>Equipamiento homologado</span>
+            </div>
+
+            <a href="#experiencias" class="bg-orange-600 hover:bg-orange-700 text-white text-xl px-10 py-5 rounded-2xl font-bold transition transform hover:scale-105 shadow-2xl inline-block">
+                RESERVAR MI AVENTURA
+            </a>
+            <p class="text-white/80 mt-4 text-sm italic">
+                Cupos limitados · Sin experiencia previa · Confirmación rápida
+            </p>
+        </div>
+    </div>
+</header>
+
+<section id="experiencias" class="py-20 px-6 max-w-7xl mx-auto">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Elegí tu aventura</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-3xl overflow-hidden card-shadow group">
+            <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-bold mb-2">Rafting Clásico</h3>
+                <div class="flex gap-4 text-sm text-gray-500 mb-4 font-semibold uppercase tracking-wider">
+                    <span><i class="fas fa-signal text-blue-600 mr-1"></i> Nivel: Fácil</span>
+                    <span><i class="fas fa-clock text-blue-600 mr-1"></i> 2 Horas</span>
+                </div>
+                <button class="w-full border-2 border-blue-700 text-blue-700 font-bold py-3 rounded-xl hover:bg-blue-700 hover:text-white transition">Ver experiencia</button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl overflow-hidden card-shadow group">
+            <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-bold mb-2">Rafting Extreme</h3>
+                <div class="flex gap-4 text-sm text-gray-500 mb-4 font-semibold uppercase tracking-wider">
+                    <span><i class="fas fa-signal text-red-600 mr-1"></i> Nivel: Pro</span>
+                    <span><i class="fas fa-clock text-blue-600 mr-1"></i> 4 Horas</span>
+                </div>
+                <button class="w-full border-2 border-blue-700 text-blue-700 font-bold py-3 rounded-xl hover:bg-blue-700 hover:text-white transition">Ver experiencia</button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl overflow-hidden card-shadow group">
+            <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-bold mb-2">Combo Aventura</h3>
+                <div class="flex gap-4 text-sm text-gray-500 mb-4 font-semibold uppercase tracking-wider">
+                    <span><i class="fas fa-signal text-green-600 mr-1"></i> Nivel: Familiar</span>
+                    <span><i class="fas fa-clock text-blue-600 mr-1"></i> Full Day</span>
+                </div>
+                <button class="w-full border-2 border-blue-700 text-blue-700 font-bold py-3 rounded-xl hover:bg-blue-700 hover:text-white transition">Ver experiencia</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="porque" class="bg-white py-20 px-6">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 italic">¿Por qué Aventurero Nohely?</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="text-center p-6 bg-blue-50 rounded-2xl">
+                <div class="text-blue-700 text-4xl mb-4"><i class="fas fa-users"></i></div>
+                <h4 class="font-bold mb-2 text-xl">+50k Aventureros</h4>
+                <p class="text-gray-600">Creando recuerdos épicos desde 1993.</p>
+            </div>
+
+            <div class="text-center p-6 bg-blue-50 rounded-2xl">
+                <div class="text-blue-700 text-4xl mb-4"><i class="fas fa-heartbeat"></i></div>
+                <h4 class="font-bold mb-2 text-xl">Seguridad #1</h4>
+                <p class="text-gray-600">Protocolos rigurosos para tu tranquilidad.</p>
+            </div>
+
+            <div class="text-center p-6 bg-blue-50 rounded-2xl">
+                <div class="text-blue-700 text-4xl mb-4"><i class="fas fa-user-friends"></i></div>
+                <h4 class="font-bold mb-2 text-xl">Grupos Reducidos</h4>
+                <p class="text-gray-600">Atención personalizada en cada balsa.</p>
+            </div>
+
+            <div class="text-center p-6 bg-blue-50 rounded-2xl">
+                <div class="text-blue-700 text-4xl mb-4"><i class="fas fa-language"></i></div>
+                <h4 class="font-bold mb-2 text-xl">Guías Bilingües</h4>
+                <p class="text-gray-600">Expertos que hablan tu mismo idioma.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="seguridad" class="py-20 px-6 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+    <div class="md:w-1/2">
+        <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800" class="rounded-3xl shadow-2xl">
+    </div>
+
+    <div class="md:w-1/2">
+        <h2 class="text-3xl font-bold mb-6">Tu seguridad es nuestra prioridad absoluta</h2>
+        <p class="text-lg text-gray-600 mb-8">No dejamos nada al azar. Usamos equipamiento de última generación certificado internacionalmente.</p>
+
+        <div class="space-y-4">
+            <div class="flex items-start gap-4">
+                <i class="fas fa-check-circle text-green-500 text-xl mt-1"></i>
+                <p><strong>Certificación IRF:</strong> Guías formados por la Federación Internacional de Rafting.</p>
+            </div>
+
+            <div class="flex items-start gap-4">
+                <i class="fas fa-check-circle text-green-500 text-xl mt-1"></i>
+                <p><strong>Protocolos Clima:</strong> Reprogramación sin cargo si el clima no es apto para navegar.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="reservar" class="py-20 px-6 bg-blue-700 text-center text-white">
+    <h2 class="text-4xl font-bold mb-4">¿Estás listo para el río?</h2>
+    <p class="text-xl mb-10 opacity-90 text-blue-100">Asegurá tu lugar hoy. Cupos limitados por salida.</p>
+
+    <button class="bg-orange-600 hover:bg-orange-700 px-12 py-5 rounded-2xl text-2xl font-bold shadow-2xl transition-all hover:scale-105">
+        RESERVAR AHORA
+    </button>
+    <section id="formulario" class="py-20 px-6 bg-black">
+        <div class="max-w-xl mx-auto">
+            <h2 class="text-3xl font-bold mb-6">Hacer una reserva</h2>
+            @if (ViewBag.Popup != null)
+            {
+                <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div class="bg-white text-black p-6 rounded shadow-lg text-center">
+                        <h3 class="text-xl font-bold mb-4">@ViewBag.Popup</h3>
+                        <button onclick="document.getElementById('popup').remove()"
+                                class="bg-blue-600 text-white px-4 py-2 rounded">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            }
+
+            <form asp-controller="Home" asp-action="CrearReserva" method="post" class="space-y-4">
+
+                <div asp-validation-summary="All" class="text-red-600 mb-4"></div>
+
+                <input type="text" name="Nombre" placeholder="Tu nombre"
+                       class="w-full border p-3 rounded placeholder-black text-black" required />
+
+                <input type="email" name="Email" placeholder="Tu email"
+                       class="w-full border p-3 rounded placeholder-black text-black" required />
+
+                <input type="datetime-local" name="FechaReserva"
+                       class="w-full border p-3 rounded placeholder-black text-black" required />
+
+                <select name="TipoAventura" class="w-full border p-3 rounded placeholder-black text-black" required>
+                    <option value="">Selecciona una aventura</option>
+                    <option value="Clasico">Rafting Clásico</option>
+                    <option value="Extreme">Rafting Extreme</option>
+                    <option value="Combo">Combo Aventura</option>
+                </select>
+
+                <button class="bg-blue-700 text-black px-6 py-3 rounded font-bold">
+                    Enviar reserva
+                </button>
+            </form>
+        </div>
+    </section>
+
+
+    <p class="mt-4 text-sm text-blue-200 italic">Sin experiencia previa · Seguridad garantizada</p>
+</section>
