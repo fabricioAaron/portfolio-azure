@@ -184,21 +184,125 @@ En resumen, el servidor APP recibe las reservas desde el formulario, las guarda 
 
 <img width="1231" height="700" alt="13-CRUD" src="https://github.com/user-attachments/assets/a4ca9d96-0c18-4868-9fb5-31160cfb0f16" />
 
+## Servidor de Mensajería (Ubuntu + RabbitMQ)
+
+El servidor `RabbitMQ` es una máquina Ubuntu Server que ejecuta RabbitMQ dentro de un contenedor Docker.  
+El contenedor se levanta con la imagen `rabbitmq:3-management`, que incluye la consola web de administración.[file:64]
+
+RabbitMQ escucha en:
+- Puerto 5672/TCP: canal AMQP por el que se conecta la aplicación .NET.
+- Puerto 15672/TCP: consola web donde se pueden ver colas, mensajes y configuración.
+
+<img width="1384" height="179" alt="14 instalar docker rabbit mq " src="https://github.com/user-attachments/assets/1a0338db-4e80-4559-852e-8e60dff9a3d0" />
+
+
+### Elementos creados en RabbitMQ
+
+En la consola web de RabbitMQ se han configurado estos componentes:
+
+- Un **exchange** llamado `test_exchange`, de tipo `direct` y marcado como durable.
+- Una **routing key** llamada `test_rk`.  
+- Una **cola** llamada `test_queue`, asociada al exchange `test_exchange` mediante la routing key `test_rk` (binding).
+
+El exchange recibe los mensajes de la aplicación y, si la routing key coincide (`test_rk`), envía cada mensaje a la cola `test_queue`.
+
+<img width="1136" height="585" alt="20 anidar rabbit mq " src="https://github.com/user-attachments/assets/40399faf-c680-4e9e-bf97-4ddde483e240" />
+
+
+### Conexión desde la aplicación de reservas
+
+La aplicación web ASP.NET que vive en el servidor `APP.template.local` se conecta a este RabbitMQ cuando el usuario realiza una reserva.  
+En el código de la aplicación se configura:
+
+- La IP o nombre del servidor Ubuntu.
+- El exchange `test_exchange`.
+- La routing key `test_rk`.
+- La cola de destino `test_queue`.
+
+<img width="692" height="550" alt="17 5 creacion exchange rabbitmq" src="https://github.com/user-attachments/assets/9dd10412-bcd0-4f59-860a-3ea5229b0556" />
+
+
+
+Cada vez que el usuario envía el formulario de reserva (nombre, email, fecha, tipo de aventura), el servidor APP hace dos cosas a la vez:
+
+1. Guarda los datos en SQL Server, en la tabla `Reservas`, que se muestra en el Panel de reservas de la web.
+2. Construye un texto con la información de la reserva, por ejemplo:  
+   `Reserva creada: fabricio kenny - k.fabricioca…@gmail.com - 13/05/2026 13:36:00 - Extreme`,  
+   y lo envía a RabbitMQ usando el exchange `test_exchange` y la routing key `test_rk`.
+
+<img width="900" height="701" alt="17 1" src="https://github.com/user-attachments/assets/41da99d2-0395-4acd-9951-e4ab6b9a467a" />
+
+
+De esta manera, una única acción del usuario (enviar el formulario en la web) genera:
+
+- Un registro persistente en la base de datos SQL Server, que se gestiona desde el Panel de reservas de la aplicación.[file:59][file:60]  
+- Un mensaje en una cola de RabbitMQ, que queda listo para que en el futuro otros servicios lo procesen (por ejemplo, envío de correos de confirmación, generación de facturas o integración con otros sistemas).
+
+
+
 ### 4.4. Servidor Veeam
 
-- Miembro del dominio `template.local`.
-- Software: Veeam Backup con agente instalado en el servidor AD.
-- Escenario de backup:
-  - Origen: servidor AD (en especial la carpeta `\\AD\shares`).
-  - Destino: carpeta compartida `shares` (u otra ubicación configurada en Veeam).
-- Objetivo:
-  - Poder restaurar archivos o carpetas borradas por los usuarios.
+## Servidor de Copias de Seguridad (Veeam)
 
-Configuración de red:
-- IP estática: `192.168.1.40`.
-- DNS: servidor AD (`192.168.1.10`).
+El servidor `veeam.template.local` es el punto central de backup del laboratorio.  
+Desde aquí se protegen los datos del controlador de dominio `AD.template.local`, en concreto la carpeta compartida `C:\shares` donde los departamentos guardan sus ficheros.[file:80][file:89]
 
----
+### 1. Incorporación de ESXi y del servidor Veeam a la infraestructura de backup
+
+En la consola de Veeam se ha configurado primero la infraestructura básica:
+
+1. En el menú **Backup Infrastructure → Managed Servers** se ha añadido el host VMware ESXi.[file:77][file:79]  
+2. Al pulsar **Add Server → Virtualization Platforms → VMware vSphere**, se indica:
+   - La IP del host ESXi: `192.168.1.139`.[file:71]
+   - Las credenciales de administrador (`root` + contraseña del ESXi).[file:72]
+3. Veeam se conecta al ESXi y recopila la información de discos y máquinas virtuales.[file:73][file:74][file:75]
+
+En el mismo panel se ve también el propio servidor `veeam.template.local` como servidor Windows gestionado, que actúa como servidor de backup.[file:77]
+
+### 2. Creación del Protection Group para el servidor AD
+
+Para instalar y gestionar el agente de backup en `AD.template.local` se crea un Protection Group:
+
+1. En **Inventory → Physical and Cloud Infrastructure** se selecciona **Create Protection Group**.[file:68][file:84]
+2. En la pestaña **Computers** se añade el equipo con:
+   - Dirección: `192.168.1.10` (servidor AD).
+   - Cuenta usada: `administrator@template.local`.[file:87]
+3. En **Options** se indica que el servidor de distribución es `veeam.template.local`, se marca **Install backup agent** y se habilita la actualización automática de componentes.[file:86]
+4. Al aplicar la configuración, Veeam despliega el agente en el servidor AD y se comprueba que la instalación y detección del servidor han sido correctas.[file:85][file:88]
+
+### 3. Creación del trabajo de backup del AD (backup a nivel de archivos)
+
+Una vez instalado el agente, se crea un **Agent Backup Job** específico para el servidor AD:
+
+1. En el inventario, dentro del Protection Group del AD, se lanza la creación de un nuevo trabajo de agente.[file:68]
+2. En la pestaña **Name** se asigna un nombre descriptivo al trabajo, por ejemplo `Backupfile`.[file:68]
+3. En **Computers** se selecciona `AD.template.local` como máquina protegida.[file:69]
+4. En **Backup Mode** se elige la opción **File level backup (slower)** para hacer backup solo de carpetas y archivos concretos, no de todo el volumen.[file:68]
+5. En **Objects** se define qué se va a copiar:
+   - Se añade la carpeta `C:\shares` del servidor AD, que es donde están las carpetas de Finanzas, RRHH y Ventas.[file:89]
+6. En **Storage** se selecciona el repositorio `Default Backup Repository (Created by Veeam Backup)` y se establece una retención de, por ejemplo, 5 días.[file:81]
+7. En **Schedule** se configura que el trabajo se ejecute automáticamente todos los días a las 22:00, con reintentos en caso de errores.[file:79]
+
+Tras guardar el trabajo, se lanza una primera ejecución manual para generar el primer punto de restauración.[file:78]
+
+### 4. Ejecución y verificación del backup
+
+Cuando se inicia el trabajo `Backupfile`:
+
+- En la vista de trabajos se ve el progreso del backup con el objeto `AD.template.local`.[file:79]
+- Una vez completado, el estado cambia a **Success** y se muestran los datos procesados de la carpeta `C:\shares`.[file:77]
+- El repositorio de backup almacena el punto de restauración asociado a la fecha y hora de la ejecución.[file:78]
+
+### 5. Restauración de archivos desde la carpeta compartida
+
+Para comprobar que la protección funciona, se realiza una restauración a nivel de archivos:
+
+1. En la consola de Veeam, en la sección de backups, se selecciona el trabajo `Backupfile` y se utiliza la opción **Restore Guest Files**.[file:82]
+2. Se abre el **Backup Browser** y se navega por la estructura del servidor `AD.template.local` hasta `C:\shares`.[file:83]
+3. Dentro de `C:\shares` se accede a las subcarpetas de departamento (por ejemplo `Finanzas → Costos-2026`) y se visualizan los archivos de prueba (`costos_2026.txt`, `costos_2026.xlsx`).[file:89]
+4. Desde este navegador se pueden restaurar archivos o carpetas concretas al servidor original o a otra ubicación, permitiendo recuperar datos borrados por los usuarios.
+
+Con esta configuración, la carpeta compartida principal del dominio (`C:\shares` en el servidor AD) queda protegida mediante copias diarias y se dispone de un procedimiento sencillo para restaurar ficheros críticos en caso de eliminación o modificación accidental.[file:80][file:81][file:89]
 
 ## 5. Flujo de funcionamiento del proyecto
 
