@@ -1,6 +1,7 @@
 # 🏗️  Infraestructura On-Premise
 
-<img width="2816" height="1536" alt="Gemini_Generated_Image_8vwqht8vwqht8vwq (1)" src="https://github.com/user-attachments/assets/9f63fc77-5769-4ae8-b9bb-db3c1f96f40c" />
+<img width="2816" height="1536" alt="Gemini_Generated_Image_x48wqux48wqux48w" src="https://github.com/user-attachments/assets/fb4d57d2-5800-42dd-bafe-6537e05fa1e3" />
+
 
 # Esquema 
 
@@ -140,32 +141,48 @@ las cuentas de usuario se añaden a grupos globales de departamento, y estos gru
 
 ## Servidor de Aplicaciones (.NET + SQL Server)
 
-- Miembro del dominio `template.local`.
-- Servicios:
-  - Aplicación web desarrollada en .NET.
-  - SQL Server con base de datos `reservas`.
-- Flujo funcional:
-  1. El usuario accede a la página web.
-  2. Rellena un formulario de reserva.
-  3. Los datos se guardan en la base de datos `reservas`.
-  4. La aplicación envía un mensaje a RabbitMQ (cola) con la información del formulario.
+- Servidor: `APP.template.local`
+- Rol: web de reservas y base de datos.
+- Tecnologías: ASP.NET Core MVC (.NET 10.0 LTS) y SQL Server.
+- URL de pruebas: `https://localhost:7092`.
 
-Configuración de red:
-- IP estática: `192.168.1.20`.
-- DNS: servidor AD (`192.168.1.10`).
+<img width="888" height="544" alt="9" src="https://github.com/user-attachments/assets/42f6bd7c-a32f-4560-9249-7fb190ceb040" />
 
-### 4.3. Servidor RabbitMQ (Ubuntu + Docker)
+### Funcionamiento de la web
 
-- Sistema operativo: Ubuntu Server 64 bits.
-- RabbitMQ desplegado mediante Docker (Dockerfile y build propios).
-- Función:
-  - Recibir mensajes desde la aplicación .NET.
-  - Gestionar colas de mensajes para procesamientos asíncronos.
+La web muestra una página principal de la empresa de aventura y un **formulario de reserva** con nombre, email, fecha y tipo de aventura.  
+Cuando el usuario envía el formulario, la aplicación crea un registro en la tabla `Reservas` de SQL Server con esos datos.
 
-Configuración de red:
-- IP estática: `192.168.1.30`.
-- Acceso típico:
-  - Cliente RabbitMQ configurado en la app (.NET) con host `192.168.1.30` y puerto (por defecto 5672).
+<img width="1476" height="610" alt="10" src="https://github.com/user-attachments/assets/b5478dce-655e-49b3-88b0-fd9d7ceedfe6" />
+
+<img width="1672" height="609" alt="11" src="https://github.com/user-attachments/assets/a6c8b95f-4128-44a5-b475-26f414888510" />
+
+### Base de datos de reservas
+
+Tabla principal: `Reservas`.
+
+Campos principales:
+- `Id`
+- `Nombre`
+- `Email`
+- `FechaReserva`
+- `TipoAventura`
+
+La consulta `SELECT * FROM Reservas` muestra todas las reservas guardadas.
+
+<img width="683" height="304" alt="12" src="https://github.com/user-attachments/assets/e1a13c31-08c3-4580-9ea1-fcfed93fb214" />
+
+### Panel de reservas (CRUD)
+
+La aplicación incluye un **Panel de reservas** solo para administración.  
+En ese panel se muestra una tabla con todas las reservas y, para cada una, dos acciones:
+
+- **Editar**: modificar los datos de una reserva.
+- **Eliminar**: borrar una reserva.
+
+En resumen, el servidor APP recibe las reservas desde el formulario, las guarda en SQL Server y permite gestionarlas (ver, editar y eliminar) desde el panel de control.
+
+<img width="1231" height="700" alt="13-CRUD" src="https://github.com/user-attachments/assets/a4ca9d96-0c18-4868-9fb5-31160cfb0f16" />
 
 ### 4.4. Servidor Veeam
 
