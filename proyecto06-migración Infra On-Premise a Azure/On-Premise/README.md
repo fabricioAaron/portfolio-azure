@@ -260,7 +260,10 @@ En la consola de Veeam se ha configurado primero la infraestructura básica:
    - Las credenciales de administrador (`root` + contraseña del ESXi).
 3. Veeam se conecta al ESXi y recopila la información de discos y máquinas virtuales.
 
+
 <img width="626" height="486" alt="23 conifg-que tivo de servidor" src="https://github.com/user-attachments/assets/66941718-d8c0-497f-a819-6aef9402d70b" />
+
+---
 
 <img width="650" height="241" alt="24 elegimos nuestro servidor " src="https://github.com/user-attachments/assets/14f9af50-deb2-4036-8853-a2c07fec7d2a" />
 
