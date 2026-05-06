@@ -38,6 +38,10 @@ El entorno se usa para practicar administración de sistemas, copias de segurida
 ### Arquitectura general
 <img width="1821" height="590" alt="imagen" src="https://github.com/user-attachments/assets/0c8f365b-78cf-400c-97cc-1dddf8473552" />
 
+*dashboard del EXSi*
+
+
+---
 **Capa física / host**
 
 - Equipo físico: Intel Core i7‑11800H, 16 GB RAM.
@@ -46,6 +50,10 @@ El entorno se usa para practicar administración de sistemas, copias de segurida
 - IP de gestión ESXi (estática): `192.168.1.139`.
 
 <img width="1011" height="491" alt="1" src="https://github.com/user-attachments/assets/6e31dd16-03e8-4b3c-b17a-4de23eed7ea0" />
+
+*configuración de con la ip estática de nuestro servidor*
+
+---
 
 **Red**
 
@@ -56,12 +64,20 @@ El entorno se usa para practicar administración de sistemas, copias de segurida
 
 <img width="802" height="541" alt="2" src="https://github.com/user-attachments/assets/ba49a047-9091-4190-b38e-1d91aeec571f" />
 
+*nuestro vSwitch0 y nuestra lan qu eesta conectada con 4 mv*
+
+---
+
 <img width="1226" height="269" alt="3" src="https://github.com/user-attachments/assets/c4b956e7-4637-44ed-bc2b-e32050005fdc" />
+
+*nuetras  4 mv que tenemos configurada cada uno con su dominio su ran asiganda*
 
 ---
 ## Servidor de Directorio Activo, DNS y Carpeta compartida
 
 <img width="1538" height="581" alt="4" src="https://github.com/user-attachments/assets/c22bdcec-0316-4d3c-95b2-5529be8126f6" />
+
+*dashboard de nuestro servido AD.template.local*
 
 ### 1. Información general
 
@@ -85,6 +101,10 @@ La OU **Usuarios** contiene las cuentas de usuario finales que se usan en el lab
 
 <img width="714" height="282" alt="6" src="https://github.com/user-attachments/assets/847833bf-daaf-49cd-860a-0e2f850d6c97" />
 
+*configuración de nuestro grupos de seguridad*
+
+---
+
 ### 3. Grupos de seguridad por departamento
 
 Dentro de la OU `Departamentos` se han creado los siguientes grupos de seguridad de tipo global:
@@ -103,8 +123,12 @@ En la OU `Usuarios` se han creado usuarios de ejemplo, por ejemplo:
 - `Carlos Ruiz`
 - `Juan Peres`
 - `Maria Gomez`
+
 <img width="801" height="377" alt="7" src="https://github.com/user-attachments/assets/a3ec04d7-16ed-482e-92e1-a5338791950b" />
 
+*creacion de los usuarios*
+
+---
 Cada usuario pertenece al grupo predeterminado **Domain Users** y, adicionalmente, al grupo de su departamento.  
 En el ejemplo mostrado, el usuario **Ana Lopez** es miembro de:
 
@@ -128,12 +152,18 @@ Por ejemplo:
 
 <img width="360" height="310" alt="8 5" src="https://github.com/user-attachments/assets/bc783399-f932-4c35-ab95-ece9f9eec027" />
 
+*creación de una carpeta compartida asiganda cada una de sus carpetas asigada a los diferentes grupos por departamento*
+
+---
 
 De esta forma se aplica el modelo **AGDLP** (Accounts → Global Groups → Domain Local Groups → Permissions):  
 las cuentas de usuario se añaden a grupos globales de departamento, y estos grupos globales se añaden a grupos de dominio locales que se usan para asignar permisos sobre las carpetas compartidas.
 
 <img width="762" height="288" alt="8" src="https://github.com/user-attachments/assets/bd0ba32f-70cb-473b-a675-cb8df6fa0778" />
 
+*las cuentas de usuario se añaden a grupos globales de departamento, y estos grupos globales se añaden a grupos de dominio locales que se usan para asignar permisos sobre las carpetas compartidas*
+
+---
 ### 6. Uso previsto
 
 - Asignar permisos NTFS y de recurso compartido sobre las carpetas del servidor de ficheros utilizando los grupos `DL_carpeta_compartida_*`.  
@@ -148,6 +178,10 @@ las cuentas de usuario se añaden a grupos globales de departamento, y estos gru
 
 <img width="888" height="544" alt="9" src="https://github.com/user-attachments/assets/42f6bd7c-a32f-4560-9249-7fb190ceb040" />
 
+*configuración del .net*
+
+---
+
 ### Funcionamiento de la web
 
 La web muestra una página principal de la empresa de aventura y un **formulario de reserva** con nombre, email, fecha y tipo de aventura.  
@@ -155,7 +189,14 @@ Cuando el usuario envía el formulario, la aplicación crea un registro en la ta
 
 <img width="1476" height="610" alt="10" src="https://github.com/user-attachments/assets/b5478dce-655e-49b3-88b0-fd9d7ceedfe6" />
 
+*levantar la página web*
+
+---
 <img width="1672" height="609" alt="11" src="https://github.com/user-attachments/assets/a6c8b95f-4128-44a5-b475-26f414888510" />
+
+*se crea un formulario para que se almacena en la base de datos y en el panel de control CRUD*
+
+---
 
 ### Base de datos de reservas
 
@@ -172,6 +213,10 @@ La consulta `SELECT * FROM Reservas` muestra todas las reservas guardadas.
 
 <img width="683" height="304" alt="12" src="https://github.com/user-attachments/assets/e1a13c31-08c3-4580-9ea1-fcfed93fb214" />
 
+*base de datos*
+
+---
+
 ### Panel de reservas (CRUD)
 
 La aplicación incluye un **Panel de reservas** solo para administración.  
@@ -184,6 +229,10 @@ En resumen, el servidor APP recibe las reservas desde el formulario, las guarda 
 
 <img width="1231" height="700" alt="13-CRUD" src="https://github.com/user-attachments/assets/a4ca9d96-0c18-4868-9fb5-31160cfb0f16" />
 
+*configuración de CRUD (Create, Read, Update y Delete)*
+
+---
+
 ## Servidor de Mensajería (Ubuntu + RabbitMQ)
 
 El servidor `RabbitMQ` es una máquina Ubuntu Server que ejecuta RabbitMQ dentro de un contenedor Docker.  
@@ -195,7 +244,9 @@ RabbitMQ escucha en:
 
 <img width="1384" height="179" alt="14 instalar docker rabbit mq " src="https://github.com/user-attachments/assets/1a0338db-4e80-4559-852e-8e60dff9a3d0" />
 
+*instalacion de rabbitmq en docker*
 
+---
 ### Elementos creados en RabbitMQ
 
 En la consola web de RabbitMQ se han configurado estos componentes:
@@ -208,7 +259,9 @@ El exchange recibe los mensajes de la aplicación y, si la routing key coincide 
 
 <img width="1136" height="585" alt="20 anidar rabbit mq " src="https://github.com/user-attachments/assets/40399faf-c680-4e9e-bf97-4ddde483e240" />
 
+*linkamos en .net para que la pg. web escuchar a rabbitmq*
 
+---
 ### Conexión desde la aplicación de reservas
 
 La aplicación web ASP.NET que vive en el servidor `APP.template.local` se conecta a este RabbitMQ cuando el usuario realiza una reserva.  
@@ -221,8 +274,9 @@ En el código de la aplicación se configura:
 
 <img width="692" height="550" alt="17 5 creacion exchange rabbitmq" src="https://github.com/user-attachments/assets/9dd10412-bcd0-4f59-860a-3ea5229b0556" />
 
+*configuración de el exchange, routing key y la cola*
 
-
+---
 Cada vez que el usuario envía el formulario de reserva (nombre, email, fecha, tipo de aventura), el servidor APP hace dos cosas a la vez:
 
 1. Guarda los datos en SQL Server, en la tabla `Reservas`, que se muestra en el Panel de reservas de la web.
@@ -263,13 +317,15 @@ En la consola de Veeam se ha configurado primero la infraestructura básica:
 
 <img width="626" height="486" alt="23 conifg-que tivo de servidor" src="https://github.com/user-attachments/assets/66941718-d8c0-497f-a819-6aef9402d70b" />
 
+`nota: aqui elegimos según el tipo de servidor `
+
 ---
 
 <img width="650" height="241" alt="24 elegimos nuestro servidor " src="https://github.com/user-attachments/assets/14f9af50-deb2-4036-8853-a2c07fec7d2a" />
 
 `nota: configuramos nuestro sevidor, en este caso VSphere (Esxi Hypervisor)`
 
-
+---
 <img width="803" height="337" alt="25 ponemos la ip de nuestro esxi" src="https://github.com/user-attachments/assets/658062d6-4066-4388-b650-62d0ffb1fb9b" />
 
 `apuntamos a la IP de nuestro servidor esxi 192.168.1.139`
