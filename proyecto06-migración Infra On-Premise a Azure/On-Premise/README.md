@@ -245,64 +245,81 @@ De esta manera, una única acción del usuario (enviar el formulario en la web) 
 ## Servidor de Copias de Seguridad (Veeam)
 
 El servidor `veeam.template.local` es el punto central de backup del laboratorio.  
-Desde aquí se protegen los datos del controlador de dominio `AD.template.local`, en concreto la carpeta compartida `C:\shares` donde los departamentos guardan sus ficheros.[file:80][file:89]
+Desde aquí se protegen los datos del controlador de dominio `AD.template.local`, en concreto la carpeta compartida `C:\shares` donde los departamentos guardan sus ficheros.
 
 ### 1. Incorporación de ESXi y del servidor Veeam a la infraestructura de backup
 
 En la consola de Veeam se ha configurado primero la infraestructura básica:
 
-1. En el menú **Backup Infrastructure → Managed Servers** se ha añadido el host VMware ESXi.[file:77][file:79]  
-2. Al pulsar **Add Server → Virtualization Platforms → VMware vSphere**, se indica:
-   - La IP del host ESXi: `192.168.1.139`.[file:71]
-   - Las credenciales de administrador (`root` + contraseña del ESXi).[file:72]
-3. Veeam se conecta al ESXi y recopila la información de discos y máquinas virtuales.[file:73][file:74][file:75]
+<img width="983" height="498" alt="22 configuración de veeam" src="https://github.com/user-attachments/assets/49657626-7c93-4ac2-914d-ede26da328a6" />
 
-En el mismo panel se ve también el propio servidor `veeam.template.local` como servidor Windows gestionado, que actúa como servidor de backup.[file:77]
+
+1. En el menú **Backup Infrastructure → Managed Servers** se ha añadido el host VMware ESXi. 
+2. Al pulsar **Add Server → Virtualization Platforms → VMware vSphere**, se indica:
+   - La IP del host ESXi: `192.168.1.139`.
+   - Las credenciales de administrador (`root` + contraseña del ESXi).
+3. Veeam se conecta al ESXi y recopila la información de discos y máquinas virtuales.
+
+<img width="626" height="486" alt="23 conifg-que tivo de servidor" src="https://github.com/user-attachments/assets/66941718-d8c0-497f-a819-6aef9402d70b" />
+
+<img width="650" height="241" alt="24 elegimos nuestro servidor " src="https://github.com/user-attachments/assets/14f9af50-deb2-4036-8853-a2c07fec7d2a" />
+
+`nota: configuramos nuestro sevidor, en este caso VSphere (Esxi Hypervisor)`
+
+
+<img width="803" height="337" alt="25 ponemos la ip de nuestro esxi" src="https://github.com/user-attachments/assets/658062d6-4066-4388-b650-62d0ffb1fb9b" />
+
+`apuntamos a la IP de nuestro servidor esxi 192.168.1.139`
+
+
+<img width="806" height="463" alt="26 credenciales esxi" src="https://github.com/user-attachments/assets/c8c7f924-4da6-4392-8c0d-4b3a549ae6a1" />
+
+En el mismo panel se ve también el propio servidor `veeam.template.local` como servidor Windows gestionado, que actúa como servidor de backup.
 
 ### 2. Creación del Protection Group para el servidor AD
 
 Para instalar y gestionar el agente de backup en `AD.template.local` se crea un Protection Group:
 
-1. En **Inventory → Physical and Cloud Infrastructure** se selecciona **Create Protection Group**.[file:68][file:84]
+1. En **Inventory → Physical and Cloud Infrastructure** se selecciona **Create Protection Group**.
 2. En la pestaña **Computers** se añade el equipo con:
    - Dirección: `192.168.1.10` (servidor AD).
-   - Cuenta usada: `administrator@template.local`.[file:87]
-3. En **Options** se indica que el servidor de distribución es `veeam.template.local`, se marca **Install backup agent** y se habilita la actualización automática de componentes.[file:86]
-4. Al aplicar la configuración, Veeam despliega el agente en el servidor AD y se comprueba que la instalación y detección del servidor han sido correctas.[file:85][file:88]
+   - Cuenta usada: `administrator@template.local`.
+3. En **Options** se indica que el servidor de distribución es `veeam.template.local`, se marca **Install backup agent** y se habilita la actualización automática de componentes.
+4. Al aplicar la configuración, Veeam despliega el agente en el servidor AD y se comprueba que la instalación y detección del servidor han sido correctas.
 
 ### 3. Creación del trabajo de backup del AD (backup a nivel de archivos)
 
 Una vez instalado el agente, se crea un **Agent Backup Job** específico para el servidor AD:
 
-1. En el inventario, dentro del Protection Group del AD, se lanza la creación de un nuevo trabajo de agente.[file:68]
-2. En la pestaña **Name** se asigna un nombre descriptivo al trabajo, por ejemplo `Backupfile`.[file:68]
-3. En **Computers** se selecciona `AD.template.local` como máquina protegida.[file:69]
-4. En **Backup Mode** se elige la opción **File level backup (slower)** para hacer backup solo de carpetas y archivos concretos, no de todo el volumen.[file:68]
+1. En el inventario, dentro del Protection Group del AD, se lanza la creación de un nuevo trabajo de agente.
+2. En la pestaña **Name** se asigna un nombre descriptivo al trabajo, por ejemplo `Backupfile`.
+3. En **Computers** se selecciona `AD.template.local` como máquina protegida.
+4. En **Backup Mode** se elige la opción **File level backup (slower)** para hacer backup solo de carpetas y archivos concretos, no de todo el volumen.
 5. En **Objects** se define qué se va a copiar:
-   - Se añade la carpeta `C:\shares` del servidor AD, que es donde están las carpetas de Finanzas, RRHH y Ventas.[file:89]
-6. En **Storage** se selecciona el repositorio `Default Backup Repository (Created by Veeam Backup)` y se establece una retención de, por ejemplo, 5 días.[file:81]
-7. En **Schedule** se configura que el trabajo se ejecute automáticamente todos los días a las 22:00, con reintentos en caso de errores.[file:79]
+   - Se añade la carpeta `C:\shares` del servidor AD, que es donde están las carpetas de Finanzas, RRHH y Ventas.
+6. En **Storage** se selecciona el repositorio `Default Backup Repository (Created by Veeam Backup)` y se establece una retención de, por ejemplo, 5 días.
+7. En **Schedule** se configura que el trabajo se ejecute automáticamente todos los días a las 22:00, con reintentos en caso de errores.
 
-Tras guardar el trabajo, se lanza una primera ejecución manual para generar el primer punto de restauración.[file:78]
+Tras guardar el trabajo, se lanza una primera ejecución manual para generar el primer punto de restauración.
 
 ### 4. Ejecución y verificación del backup
 
 Cuando se inicia el trabajo `Backupfile`:
 
-- En la vista de trabajos se ve el progreso del backup con el objeto `AD.template.local`.[file:79]
-- Una vez completado, el estado cambia a **Success** y se muestran los datos procesados de la carpeta `C:\shares`.[file:77]
-- El repositorio de backup almacena el punto de restauración asociado a la fecha y hora de la ejecución.[file:78]
+- En la vista de trabajos se ve el progreso del backup con el objeto `AD.template.local`.
+- Una vez completado, el estado cambia a **Success** y se muestran los datos procesados de la carpeta `C:\shares`.
+- El repositorio de backup almacena el punto de restauración asociado a la fecha y hora de la ejecución.
 
 ### 5. Restauración de archivos desde la carpeta compartida
 
 Para comprobar que la protección funciona, se realiza una restauración a nivel de archivos:
 
-1. En la consola de Veeam, en la sección de backups, se selecciona el trabajo `Backupfile` y se utiliza la opción **Restore Guest Files**.[file:82]
-2. Se abre el **Backup Browser** y se navega por la estructura del servidor `AD.template.local` hasta `C:\shares`.[file:83]
-3. Dentro de `C:\shares` se accede a las subcarpetas de departamento (por ejemplo `Finanzas → Costos-2026`) y se visualizan los archivos de prueba (`costos_2026.txt`, `costos_2026.xlsx`).[file:89]
+1. En la consola de Veeam, en la sección de backups, se selecciona el trabajo `Backupfile` y se utiliza la opción **Restore Guest Files**.
+2. Se abre el **Backup Browser** y se navega por la estructura del servidor `AD.template.local` hasta `C:\shares`.
+3. Dentro de `C:\shares` se accede a las subcarpetas de departamento (por ejemplo `Finanzas → Costos-2026`) y se visualizan los archivos de prueba (`costos_2026.txt`, `costos_2026.xlsx`).
 4. Desde este navegador se pueden restaurar archivos o carpetas concretas al servidor original o a otra ubicación, permitiendo recuperar datos borrados por los usuarios.
 
-Con esta configuración, la carpeta compartida principal del dominio (`C:\shares` en el servidor AD) queda protegida mediante copias diarias y se dispone de un procedimiento sencillo para restaurar ficheros críticos en caso de eliminación o modificación accidental.[file:80][file:81][file:89]
+Con esta configuración, la carpeta compartida principal del dominio (`C:\shares` en el servidor AD) queda protegida mediante copias diarias y se dispone de un procedimiento sencillo para restaurar ficheros críticos en caso de eliminación o modificación accidental.
 
 ## 5. Flujo de funcionamiento del proyecto
 
