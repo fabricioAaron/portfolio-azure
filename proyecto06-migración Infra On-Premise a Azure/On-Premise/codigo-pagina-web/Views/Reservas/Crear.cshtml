@@ -3,43 +3,51 @@
 @{
     ViewData["Title"] = "Crear Reserva";
 }
-<h1 style="color:red">ESTA ES LA VISTA CORRECTA</h1>
 
-<h2>Crear Reserva</h2>
+<section class="py-10 px-6 bg-black min-h-screen text-white">
+    <div class="max-w-xl mx-auto">
+        <h2 class="text-3xl font-bold mb-6">Crear reserva</h2>
 
-<form asp-action="Crear" method="post">
+        <form asp-action="Crear" method="post" class="space-y-4">
+            <div asp-validation-summary="All" class="text-red-400"></div>
 
-    <div class="form-group">
-        <label asp-for="Nombre"></label>
-        <input asp-for="Nombre" class="form-control" />
-        <span asp-validation-for="Nombre" class="text-danger"></span>
+            <div>
+                <label asp-for="Nombre" class="block mb-1"></label>
+                <input asp-for="Nombre" class="w-full border p-3 rounded text-black" />
+                <span asp-validation-for="Nombre" class="text-red-400"></span>
+            </div>
+
+            <div>
+                <label asp-for="Email" class="block mb-1"></label>
+                <input asp-for="Email" class="w-full border p-3 rounded text-black" />
+                <span asp-validation-for="Email" class="text-red-400"></span>
+            </div>
+
+            <div>
+                <label asp-for="FechaReserva" class="block mb-1"></label>
+                <input asp-for="FechaReserva" type="datetime-local" class="w-full border p-3 rounded text-black" />
+                <span asp-validation-for="FechaReserva" class="text-red-400"></span>
+            </div>
+
+            <div>
+                <label asp-for="TipoAventura" class="block mb-1"></label>
+                <select asp-for="TipoAventura" class="w-full border p-3 rounded text-black">
+                    <option value="">-- Selecciona una aventura --</option>
+                    <option value="Clasico">Rafting Clásico</option>
+                    <option value="Extreme">Rafting Extreme</option>
+                    <option value="Combo">Combo Aventura</option>
+                </select>
+                <span asp-validation-for="TipoAventura" class="text-red-400"></span>
+            </div>
+
+            <button type="submit" class="bg-blue-700 text-white px-6 py-3 rounded font-bold">
+                Crear
+            </button>
+            <a asp-action="Index" class="text-blue-400 hover:underline ml-4">Volver</a>
+        </form>
     </div>
+</section>
 
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="FechaReserva"></label>
-        <input asp-for="FechaReserva" type="datetime-local" class="form-control" />
-        <span asp-validation-for="FechaReserva" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="TipoAventura"></label>
-        <select asp-for="TipoAventura" class="form-control">
-            <option value="">-- Selecciona una aventura --</option>
-            <option value="Escalada">Escalada</option>
-            <option value="Senderismo">Senderismo</option>
-            <option value="Kayak">Kayak</option>
-            <option value="Parapente">Parapente</option>
-        </select>
-        <span asp-validation-for="TipoAventura" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary mt-3">Crear</button>
-    <a asp-action="Index" class="btn btn-secondary mt-3">Volver</a>
-
-</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

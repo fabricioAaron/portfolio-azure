@@ -9,10 +9,12 @@ namespace MiWebAPP.Controllers
     public class ReservasController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly RabbitMqService _rabbitMqService;
 
-        public ReservasController(ApplicationDbContext context)
+        public ReservasController(ApplicationDbContext context, RabbitMqService rabbitMqService)
         {
             _context = context;
+            _rabbitMqService = rabbitMqService;
         }
 
         // GET: /Reservas
@@ -54,8 +56,7 @@ namespace MiWebAPP.Controllers
             _context.Reservas.Add(reserva);
             await _context.SaveChangesAsync();
 
-            var servicio = new RabbitMqService();
-            servicio.EnviarReserva($"Reserva creada con ID: {reserva.Id}");
+            _rabbitMqService.EnviarReserva($"Reserva creada con ID: {reserva.Id}");
 
             TempData["Mensaje"] = "Reserva creada correctamente.";
             return RedirectToAction(nameof(Index));

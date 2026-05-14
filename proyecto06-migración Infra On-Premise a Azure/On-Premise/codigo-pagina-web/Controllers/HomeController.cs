@@ -8,10 +8,12 @@ namespace MiWebAPP.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly RabbitMqService _rabbitMqService;
 
-        public HomeController(ApplicationDbContext context)
+        public HomeController(ApplicationDbContext context, RabbitMqService rabbitMqService)
         {
             _context = context;
+            _rabbitMqService = rabbitMqService;
         }
 
         public IActionResult Index()
@@ -20,6 +22,7 @@ namespace MiWebAPP.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult CrearReserva(Reserva reserva)
         {
             if (!ModelState.IsValid)
@@ -30,8 +33,7 @@ namespace MiWebAPP.Controllers
             _context.SaveChanges();
 
             // 2. Enviar a RabbitMQ
-            var servicio = new RabbitMqService();
-            servicio.EnviarReserva(
+            _rabbitMqService.EnviarReserva(
                 $"Reserva creada: {reserva.Nombre} - {reserva.Email} - {reserva.FechaReserva} - {reserva.TipoAventura}"
             );
 

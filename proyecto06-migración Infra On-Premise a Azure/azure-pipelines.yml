@@ -1,0 +1,44 @@
+trigger:
+- main
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  buildConfiguration: Release
+  projectPath: 'proyecto06-migración Infra On-Premise a Azure/On-Premise/codigo-pagina-web/codigo-pagina-web.csproj'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .NET 8 SDK'
+  inputs:
+    packageType: sdk
+    version: '8.0.x'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore project'
+  inputs:
+    command: restore
+    projects: '$(projectPath)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build project'
+  inputs:
+    command: build
+    projects: '$(projectPath)'
+    arguments: '--configuration $(buildConfiguration) --no-restore'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish project'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: '$(projectPath)'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish artifact'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: drop
