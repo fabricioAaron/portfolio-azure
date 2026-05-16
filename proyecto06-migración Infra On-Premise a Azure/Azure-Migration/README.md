@@ -2,31 +2,33 @@
 
 
 
+## 📋 Índice
 
-## Índice de la infraestructura
+1. [Integración con Azure Arc](#integración-con-azure-arc)
 
-1. [Integración con Azure ARC](#Integración-con-azure-arc)
-2. [Servidor de Directorio Activo, DNS y Carpeta compartida](#servidor-de-directorio-activo-dns-y-carpeta-compartida)
-3. [Servidor de Aplicaciones (.NET + SQL Server)](#servidor-de-aplicaciones-net--sql-server)
-4. [Servidor de Mensajería (Ubuntu + RabbitMQ)](#servidor-de-mensajeria-ubuntu--rabbitmq)
-5. [Servidor de Copias de Seguridad (Veeam)](#servidor-de-copias-de-seguridad-veeam)
+# Documentación de Servidor On-Premise: AD (VM1)
 
-On-Premise: AD (VM1)
-1. Integración con Azure ARC
+## Integración con Azure Arc
+El servidor principal de la infraestructura local, identificado como **AD**, se ha proyectado hacia la nube utilizando **Azure Arc-enabled servers**. Esta configuración permite la gestión híbrida del servidor sin necesidad de migrar la carga de trabajo completa a Azure.
 
-El servidor principal de la infraestructura local, identificado como AD, se ha proyectado hacia la nube utilizando Azure Arc-enabled servers. Esta configuración permite la gestión híbrida del servidor sin necesidad de migrar la carga de trabajo completa.
-Definición y Finalidad
+### Definición y Finalidad
+**Azure Arc** es un servicio que extiende el plano de control de Azure (*Azure Resource Manager*) hacia recursos situados fuera de la plataforma (on-premise).
 
-Azure Arc es un servicio que extiende el plano de control de Azure (Azure Resource Manager) hacia recursos situados fuera de la plataforma.
+* **Finalidad en VM1:** Permitir que el servidor local sea visible en el inventario de Azure, facilitando la monitorización, la aplicación de políticas de cumplimiento (**Azure Policy**) y la gestión de actualizaciones desde una consola centralizada.
 
-    Finalidad en VM1: Permitir que el servidor local sea visible en el inventario de Azure, facilitando la monitorización, la aplicación de políticas de cumplimiento (Azure Policy) y la gestión de actualizaciones desde una consola centralizada.
+---
 
-Justificación de la Solución
+## 2. Justificación de la Solución
+Se seleccionó **Azure Arc** como la herramienta de gestión híbrida tras descartar otras opciones debido a las siguientes restricciones técnicas del entorno:
 
-Se seleccionó Azure Arc como la herramienta de gestión híbrida tras descartar otras opciones por las siguientes restricciones técnicas:
+### A. Incompatibilidad con Azure Migrate
+* **Restricción:** La suscripción **Azure for Students** y las políticas de seguridad del entorno educativo limitan el despliegue del "appliance" necesario para Azure Migrate.
+* **Limitación Técnica:** El proceso requiere permisos de administración profundos en el hipervisor (escenario restringido en el laboratorio) y cuotas de recursos que superan los límites permitidos para cuentas de estudiante.
 
-    Incompatibilidad con Azure Migrate: * La suscripción Azure for Students y las políticas de seguridad del entorno educativo limitan el despliegue del "appliance" necesario para Azure Migrate, el cual requiere permisos de administración profundos en el hipervisor y cuotas de recursos que superan los límites de la cuenta de estudiante.
+### B. Restricción de Azure Hybrid Join
+* **Restricción de Licenciamiento:** El uso de **Azure Hybrid Join** se vio imposibilitado por el tipo de licenciamiento disponible (**Education**).
+* **Limitación de Identidad:** Este nivel de licencia, junto con las políticas de *Tenant* aplicadas, restringe el registro automático de dispositivos en **Microsoft Entra ID** (antiguo Azure AD), impidiendo la unión híbrida completa del dispositivo físico/virtual local.
 
-    Restricción de Azure Hybrid Join:
+---
 
-        El uso de Azure Hybrid Join se vio imposibilitado por el tipo de licenciamiento disponible (Education). Este nivel de licencia, junto con las políticas de Tenant aplicadas, restringe el registro automático de dispositivos en Microsoft Entra ID (antiguo Azure AD), impidiendo la unión híbrida completa del dispositivo.
+> **Nota de Implementación:** Gracias a esta arquitectura basada en Arc, el servidor **AD** mantiene su rol local operativo mientras aprovecha las capacidades de gobernanza y seguridad de la nube.
