@@ -4,11 +4,15 @@
 
 ## 📋 Índice
 
-1. [Integración con Azure Arc](#integración-con-azure-arc)
+1. [Integración con Azure ARC](#integración-con-azure-arc)
 
 # Documentación de Servidor On-Premise: AD (VM1)
 
-## Integración con Azure Arc
+<img width="735" height="547" alt="configuracion de azure arc en el servidor AD" src="https://github.com/user-attachments/assets/55e2b7e2-cce8-4ba6-8ceb-0646ce18892f" />
+
+
+
+## Integración con Azure ARC
 El servidor principal de la infraestructura local, identificado como **AD**, se ha proyectado hacia la nube utilizando **Azure Arc-enabled servers**. Esta configuración permite la gestión híbrida del servidor sin necesidad de migrar la carga de trabajo completa a Azure.
 
 ### Definición y Finalidad
