@@ -188,4 +188,3 @@ If you want to learn more about creating good readme files then refer the follow
 - [ASP.NET Core](https://github.com/aspnet/Home)
 - [Visual Studio Code](https://github.com/Microsoft/vscode)
 - [Chakra Core](https://github.com/Microsoft/ChakraCore)
->>>>>>> 124b2869898096fdcfdf26162ebf0cb6baa0b305
