@@ -59,21 +59,27 @@ Resumen del desglose (valores aproximados según el Cost Analysis):
 
 ## Detalle de Recursos (Resource Group: lab-migration-onpremise)
 
-| Nombre | Tipo | Ubicación | Etiquetas (Tags) | Costo |
-| :--- | :--- | :--- | :--- | ---: |
-| ayacucho.aventuras | Application gateway | es central | departamento: it | €12.99 |
-| asp-labmigrationonpremise-9657 | App Service plan | es central | departamento: it | €4.02 |
-| ayacucho-aventuras | Application gateway | es central | departamento: it | €3.24 |
-| pe-sql | Private endpoint | es central | departamento: | €0.43 |
-| server-reservas | SQL server | es central | departamento: it | €0.40 |
-| backupdbreservas | Storage account | es central | departamento: it | €0.19 |
-| ad | microsoft.hybridcompute/machines | es central | -- | €0.19 |
-| pip-appgw | Public IP address | es central | -- | €0.19 |
-| sqlsrv-reservas-lab / sql-db-reservas | SQL database | es central | departamento: it | €0.14 |
-| ayacucho-aventura | App Service web app | es central | departamento: it | €0.04 |
-| **TOTAL** | | | | **€22.02** |
+# Análisis de Costes Estimados - Azure
 
-La vista de Cost Analysis también muestra un gráfico de área con el coste acumulado, donde se aprecia cómo el total crece ligeramente a medida que se utilizan la web de reservas, la base de datos y la mensajería.
+## Desglose de Costes por Recurso
+
+| Servicio / Recurso | Coste 5 días | Coste mensual (est. x6) | Coste anual (est. x72) |
+| :--- | :---: | :---: | :---: |
+| **Application Gateway** (ayacucho.aventuras) | 12,99 € | ≈ 77,94 € | ≈ 935,28 € |
+| **Application Gateway** (ayacucho-aventuras) | 3,24 € | ≈ 19,44 € | ≈ 233,28 € |
+| **App Service Plan** (asp-lab...) | 4,02 € | ≈ 24,12 € | ≈ 289,44 € |
+| **SQL Server** (server-reservas) | 0,40 € | ≈ 2,40 € | ≈ 28,80 € |
+| **SQL Database** (sqlsrv-reservas-lab) | 0,14 € | ≈ 0,84 € | ≈ 10,08 € |
+| **Storage Account** (backupdbreservas) | 0,19 € | ≈ 1,14 € | ≈ 13,68 € |
+| **Azure Arc / HybridCompute** (ad) | 0,19 € | ≈ 1,14 € | ≈ 13,68 € |
+| **Public IP** (pip-appgw) | 0,19 € | ≈ 1,14 € | ≈ 13,68 € |
+| **Private Endpoint** (pe-sql) | 0,43 € | ≈ 2,58 € | ≈ 30,96 € |
+| **App Service Web App** (ayacucho-...) | 0,04 € | ≈ 0,24 € | ≈ 2,88 € |
+
+## Proyección Total Anual
+
+Basado en el patrón de uso actual, la estimación anual es:
+**≈ 1.550 € – 1.600 € / año**
 
 ### 2.2. Configuración de Budget y Alertas
 
