@@ -10,7 +10,15 @@
 
 <img width="735" height="547" alt="configuracion de azure arc en el servidor AD" src="https://github.com/user-attachments/assets/55e2b7e2-cce8-4ba6-8ceb-0646ce18892f" />
 
+`configuración de azure ARC`
 
+---
+
+<img width="1337" height="1176" alt="ChatGPT Image 17 may 2026, 12_17_13" src="https://github.com/user-attachments/assets/3004b0bc-75b8-4869-a6e3-8a693247f2c4" />
+
+`conexión con azure`
+
+---
 
 ## Integración con Azure ARC
 El servidor principal de la infraestructura local, identificado como **AD**, se ha proyectado hacia la nube utilizando **Azure Arc-enabled servers**. Esta configuración permite la gestión híbrida del servidor sin necesidad de migrar la carga de trabajo completa a Azure.
@@ -36,3 +44,6 @@ Se seleccionó **Azure Arc** como la herramienta de gestión híbrida tras desca
 ---
 
 > **Nota de Implementación:** Gracias a esta arquitectura basada en Arc, el servidor **AD** mantiene su rol local operativo mientras aprovecha las capacidades de gobernanza y seguridad de la nube.
+
+
+
