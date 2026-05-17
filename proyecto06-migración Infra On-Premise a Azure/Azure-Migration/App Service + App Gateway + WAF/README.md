@@ -5,7 +5,7 @@
 
 ## Migración de la aplicación .NET a Azure App Service
 
-Tras migrar la base de datos a Azure SQL Database y la mensajería a Azure Service Bus, el siguiente paso ha sido mover la aplicación web ASP.NET Core al servicio PaaS **Azure App Service**.
+Tras migrar la base de datos a Azure SQL Database y la mensajería a Azure Service Bus, el siguiente paso ha sido mover la aplicación web ASP.NET Core al servicio PaaS **Azure App Service**
 
 ### Paso 1: Crear el App Service y el App Service Plan
 
