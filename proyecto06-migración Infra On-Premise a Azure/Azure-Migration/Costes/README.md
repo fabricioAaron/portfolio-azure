@@ -47,15 +47,31 @@ Con esta vista filtrada por la tag `departamento: it` se puede identificar con r
 ### 2.1. Desglose por Servicio
 
 En el análisis detallado del grupo de recursos `lab-migration-onpremise` se observa un **coste acumulado muy bajo**, acorde con un entorno educativo y de pruebas, pero con un control fino por servicio.
-Resumen del desglose (valores aproximados según el Cost Analysis):[file:176][file:177]
+Resumen del desglose (valores aproximados según el Cost Analysis):
 
-| Servicio            | Recurso / Instancia                          | Coste estimado en el periodo |
-|---------------------|----------------------------------------------|------------------------------|
-| Azure App Service   | Plan básico B1 (`asp-labmigrationonpremise`)| ~0,06 €                      |
-| SQL Database        | `sqlsrv-reservas-lab` / `db-reservas`       | ~0,14 € (cada uno)           |
-| Storage             | `backupdbreservas` (File Share `shares`)    | <0,01 € – 0,04 €             |
-| Service Bus         | Namespace `cola-reservas`                   | <0,01 €                      |
-| Otros (seguridad)   | Defender for Cloud y servicios asociados    | ~0,06 €                      |
+# Reporte de Costos de Azure
+
+## Resumen de Facturación
+- **Total (EUR):** €22.94 (+1687%)
+- **Promedio:** €1.43 / día
+- **Presupuesto:** €8.00 / mes (budget-miragtion)
+- **Suscripción:** Azure for Students
+
+## Detalle de Recursos (Resource Group: lab-migration-onpremise)
+
+| Nombre | Tipo | Ubicación | Etiquetas (Tags) | Costo |
+| :--- | :--- | :--- | :--- | ---: |
+| ayacucho.aventuras | Application gateway | es central | departamento: it | €12.99 |
+| asp-labmigrationonpremise-9657 | App Service plan | es central | departamento: it | €4.02 |
+| ayacucho-aventuras | Application gateway | es central | departamento: it | €3.24 |
+| pe-sql | Private endpoint | es central | departamento: | €0.43 |
+| server-reservas | SQL server | es central | departamento: it | €0.40 |
+| backupdbreservas | Storage account | es central | departamento: it | €0.19 |
+| ad | microsoft.hybridcompute/machines | es central | -- | €0.19 |
+| pip-appgw | Public IP address | es central | -- | €0.19 |
+| sqlsrv-reservas-lab / sql-db-reservas | SQL database | es central | departamento: it | €0.14 |
+| ayacucho-aventura | App Service web app | es central | departamento: it | €0.04 |
+| **TOTAL** | | | | **€22.02** |
 
 La vista de Cost Analysis también muestra un gráfico de área con el coste acumulado, donde se aprecia cómo el total crece ligeramente a medida que se utilizan la web de reservas, la base de datos y la mensajería.
 
