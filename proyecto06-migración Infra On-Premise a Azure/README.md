@@ -1,98 +1,159 @@
-# Migración híbrida On‑Premise → Azure (Resumen + Costes)
+# Resumen global: Infraestructura On‑Premise vs Azure y comparación de costes
 
-## 📋 Índice
+## 1. Infraestructura On‑Premise (técnica y funcional)
 
-1. [Resumen de la Arquitectura Migrada](#resumen-de-la-arquitectura-migrada)  
-2. [Componentes Migrados a Azure](#componentes-migrados-a-azure)  
-3. [Gestión de Costes en Azure](#gestion-de-costes-en-azure)  
-4. [Análisis de Costes del Grupo de Recursos](#analisis-de-costes-del-grupo-de-recursos)  
-5. [Presupuesto (Budget) y Control Proactivo](#presupuesto-budget-y-control-proactivo)
+En el entorno local la empresa pequeña se apoya en un hipervisor VMware ESXi / vSphere Essentials con varias máquinas virtuales:
 
----
+- **AD / Ficheros (VM1)**  
+  - Servicios: Active Directory, DNS, carpeta compartida de usuarios/departamentos.  
+  - Función: identidad y autenticación, resolución de nombres interna, servidor de ficheros central.
 
-## Resumen de la Arquitectura Migrada
+- **APP (.NET + SQL Server) (VM2)**  
+  - Servicios: IIS o Kestrel para la aplicación de reservas en .NET, base de datos SQL Server 2022 Standard.  
+  - Función: lógica de negocio (web de reservas) y persistencia de datos (tabla `Reservas`).
 
-La infraestructura on‑premise original (AD + APP .NET/SQL + RabbitMQ + Veeam + carpeta compartida) se ha modernizado de forma progresiva hacia Azure, manteniendo un enfoque híbrido:  
-- La aplicación de reservas se ejecuta ahora en **Azure App Service**, utilizando **Azure SQL Database** como base de datos y **Azure Service Bus** como mensajería.  
-- La carpeta compartida `\\AD\shares` se sincroniza con un **Azure File Share** mediante **Azure File Sync**, manteniendo acceso SMB local pero con datos replicados en la nube.  
-- El frontal web se protege con **Azure Application Gateway + WAF**, que añade HTTPS, inspección de tráfico y reglas de rate limiting por IP.[file:147][file:140][file:169]
+- **RabbitMQ (Ubuntu) (VM3)**  
+  - Servicios: Ubuntu Server con RabbitMQ (a veces montado en Docker).  
+  - Función: cola de mensajes para desacoplar la lógica de envío de correos / procesos asíncronos de las reservas.
 
----
+- **Veeam Backup (VM4)**  
+  - Servicios: Veeam Backup & Replication/Essentials.  
+  - Función: copias de seguridad de VMs, SQL y carpeta compartida hacia un repositorio en NAS/SAN.
 
-## Componentes Migrados a Azure
+- **Almacenamiento local**  
+  - Datastores de ESXi para las VMs (unos cientos de GB útiles).  
+  - NAS/SAN adicional para copias de Veeam y ficheros de usuarios (≈1 TB).
 
-Los principales servicios implicados en el grupo de recursos `lab-migration-onpremise` son:[file:176]
-
-- **Azure App Service** (`Ayacucho-Aventura` + App Service Plan básico B1)  
-  - Aloja la aplicación ASP.NET Core.  
-- **Azure SQL Database** (`db-reservas` en `sqlsrv-reservas-lab`)  
-  - Recibe las reservas migradas desde el SQL on‑premise (.bacpac) y las nuevas operaciones de la web.[file:139]  
-- **Azure Service Bus** (namespace `cola-reservas`, cola `servicebus`)  
-  - Sustituye a RabbitMQ como cola de mensajes de reservas.[file:145]  
-- **Azure Storage Account** (`backupdbreservas`) + **Azure File Share** (`shares`)  
-  - Almacena la copia en la nube de la carpeta compartida de AD mediante Azure File Sync.[file:169][file:175]  
-- **Azure File Sync (Storage Sync Service `sync-file-ad`)**  
-  - Sincroniza `E:\shares` del servidor AD con el File Share `shares` y aplica Cloud Tiering.[file:171]  
-- **Azure Application Gateway + WAF**  
-  - Publica la web por HTTPS, revisa el tráfico con WAF y aplica una regla de rate limiting (10 peticiones/minuto por IP).[file:156][file:162]  
-
-Todos estos recursos se agrupan bajo el mismo **Resource Group** etiquetado con la tag `departamento: it`, lo que permite filtrar fácilmente su consumo en Cost Management.[file:176][file:177]
+Arquitectónicamente, todo depende de un único host físico (o pocos hosts) y del almacenamiento local; la empresa asume el coste y la gestión del hardware, energía, refrigeración, reemplazos, etc.
 
 ---
 
-## Gestión de Costes en Azure
+## 2. Infraestructura en Azure (técnica y funcional)
 
-Para controlar el gasto de la migración se han aplicado dos mecanismos principales:
+En Azure has “troceado” esa infraestructura en servicios gestionados (PaaS/IaaS/híbridos):
 
-1. **Etiquetas (tags) para segmentar costes**  
-   - Se ha utilizado la tag `departamento: it` en los recursos del laboratorio.  
-   - En **Cost Management → Cost analysis** se filtra por esta tag para ver únicamente el coste de la solución de migración híbrida.[file:177]  
+- **Identidad y servidor de ficheros híbrido**  
+  - AD on‑premise sigue existiendo, pero se integra con **Azure Arc** para gestión desde Azure.  
+  - La carpeta compartida `\\AD\shares` se sincroniza con un **Azure File Share** (`shares`) usando **Azure File Sync**, con backup gestionado en Azure.  
+  - Función: mantener la experiencia SMB local pero con resiliencia y backup en la nube.
 
-2. **Análisis de Costes (Cost analysis)**  
-   - En el ámbito de la suscripción `Azure for Students` y del grupo de recursos `lab-migration-onpremise` se ha abierto la vista de **Cost analysis**.[file:176]  
-   - Rango de fechas: abril–mayo 2026.  
-   - Vista: `AccumulatedCosts`, filtrada por tag `departamento: it`.[file:177]  
+- **Capa de datos**  
+  - La antigua BD en SQL Server on‑premise se migra a **Azure SQL Database** (`db-reservas` en `sqlsrv-reservas-lab`).  
+  - Función: base de datos PaaS con copia de seguridad automática, alta disponibilidad gestionada por Azure.
 
-Esto permite identificar qué servicios de Azure son los que más contribuyen al coste total y cómo evoluciona el gasto a lo largo del tiempo.
+- **Capa de aplicación**  
+  - La aplicación .NET pasa de VM/IIS a **Azure App Service** (`Ayacucho-Aventura`) sobre un App Service Plan B1.  
+  - Función: ejecutar la web de reservas sin tener que administrar SO, parches ni IIS, solo el código.
 
----
+- **Mensajería**  
+  - RabbitMQ se sustituye por **Azure Service Bus** (namespace `cola-reservas`, cola `servicebus`).  
+  - Función: cola de mensajes totalmente gestionada, integrada con la aplicación .NET.
 
-## Análisis de Costes del Grupo de Recursos
+- **Perímetro y seguridad web**  
+  - Se publica la aplicación a través de **Azure Application Gateway + WAF** (dos gateways en tu coste, probablemente pruebas / despliegues).  
+  - Función: terminación TLS, balanceo, WAF, regla de rate limiting (10 peticiones/min por IP), acceso al App Service restringido al gateway.
 
-En el análisis de costes del Resource Group `lab-migration-onpremise` se observa un coste acumulado muy bajo (≈0,51 € en el periodo mostrado, gracias a la suscripción educativa y al uso ligero).[file:177]
+- **Gestión híbrida**  
+  - El servidor AD on‑premise está registrado en Azure Arc (`microsoft.hybridcompute/machines`), lo que permite aplicar políticas, monitorización, etc., desde Azure.  
 
-Desglose por servicio (valores aproximados mostrados en el Cost Analysis):[file:176][file:177]
-
-- **Azure App Service**  
-  - Plan básico B1: ~0,06 € en el periodo.  
-- **SQL Database / SQL Server**  
-  - Instancia `sqlsrv-reservas-lab` y su base de datos `db-reservas`: ~0,14 € cada una (servidor y base de datos).[file:176]  
-- **Storage (File Share + Storage Account)**  
-  - Cuenta `backupdbreservas` (File Share `shares` y otros datos de la migración): <0,01–0,04 €.  
-- **Service Bus**  
-  - Namespace `cola-reservas`: coste inferior a 0,01 € debido al bajo volumen de mensajes.[file:177]  
-- **Otros servicios**  
-  - Defender for Cloud u otros componentes de seguridad: ~0,06 € en total.[file:177]  
-
-La vista de Cost Analysis permite además ver en un gráfico de área la evolución del coste diario/acumulado, mostrando cómo el total crece ligeramente a medida que se utilizan la web, la base de datos y el Service Bus.[file:177]
+En resumen: pasas de un entorno centrado en VMs sobre un hipervisor a una arquitectura basada en servicios gestionados (PaaS) y sincronización híbrida, con menos dependencia de hardware propio.
 
 ---
 
-## Presupuesto (Budget) y Control Proactivo
+## 3. Costes On‑Premise: visión anual
 
-Para evitar sobrecostes y practicar buenas prácticas de FinOps, se ha configurado un **presupuesto (Budget)** específico para el entorno de migración:[file:178]
+Tu tabla de on‑premise, para una empresa pequeña, da este rango aproximado de costes anuales de software/licencias y almacenamiento:
 
-- **Scope**: suscripción `Azure for Students`, filtrada por la tag `departamento: it`.  
-- **Nombre**: `budget-migration`.  
-- **Periodo de reseteo**: `Monthly`.  
-- **Rango de fechas**: creación mayo 2026, expiración abril 2028.  
-- **Importe del presupuesto**: (definido por el alumno; el gráfico muestra el coste real frente al umbral de presupuesto).[file:178]  
+- vSphere Essentials Kit (hipervisor y gestión)  
+  - **600–900 €/año**
 
-Con este budget, Azure puede enviar alertas cuando el coste estimado o real se acerque a cierto porcentaje del límite definido (por ejemplo 80 % y 100 %), lo que ayuda a vigilar el consumo de:
+- Windows Server (3 VMs) + CAL de usuarios  
+  - Licencias Windows Server Standard (3 servidores): **900–1.500 €/año**  
+  - CAL de usuario para AD/shares (25 CAL): **300–600 €/año**
 
-- App Service  
-- SQL Database  
-- Service Bus  
-- Storage y File Sync  
+- SQL Server 2022 Standard (4 cores)  
+  - **800–1.200 €/año**
 
-Aunque en el laboratorio el coste real es muy bajo, este apartado demuestra cómo se implementaría el **control financiero** de una migración híbrida en un entorno real utilizando **Cost Management + Billing** y **Budgets** en Azure.[file:176][file:178]
+- Veeam Backup Essentials / por instancia  
+  - **700–1.000 €/año**
+
+- Almacenamiento local  
+  - Datastores ESXi (≈300 GB útiles): **50–150 €/año**  
+  - Repositorio de backups (≈1 TB): **100–200 €/año**
+
+- Ubuntu + RabbitMQ: coste de licencia **0 €** (aunque habría coste de tiempo/soporte si se profesionaliza).
+
+**Total anual estimado on‑premise (solo software/licencias/almacenamiento):**  
+👉 Entre **3.450 y 5.550 € / año**  
+(≈ **287–462 €/mes**, sin contar hardware, energía, mantenimiento físico, horas de administración, etc.)
+
+---
+
+## 4. Costes en Azure: visión del laboratorio
+
+Del reporte de costes de Azure para el grupo de recursos `lab-migration-onpremise`:
+
+- **Total (periodo observado):** 22,94 €  
+  - Promedio 1,43 €/día  
+  - Presupuesto configurado: 8 €/mes (se superó por pruebas intensivas).
+
+Detalle por recursos (mismos servicios que en la migración):
+
+| Servicio / Recurso                         | Rol aproximado en la arquitectura                       | Coste en el periodo |
+|-------------------------------------------|---------------------------------------------------------|---------------------|
+| Application Gateway (`ayacucho.aventuras` + otro) | Frontal HTTPS, WAF, balanceo hacia App Service     | 12,99 € + 3,24 €    |
+| App Service Plan B1 (`asp-labmigrationonpremise`) | Hosting PaaS de la app .NET                          | 4,02 €              |
+| SQL Server / SQL Database (`server-reservas`, `sqlsrv-reservas-lab/sql-db-reservas`) | BD de reservas gestionada en Azure SQL     | ≈0,54 € (0,40 + 0,14) |
+| Storage Account (`backupdbreservas`)      | File Share `shares` + backups                         | 0,19 €              |
+| Azure Arc / HybridCompute (`ad`)          | Registro del servidor AD on‑premise                   | 0,19 €              |
+| Public IP (`pip-appgw`)                   | IP pública del Application Gateway                    | 0,19 €              |
+| App Service Web App (`ayacucho-aventura`) | Sitio web de producción                                | 0,04 €              |
+| Private Endpoint (`pe-sql`)               | Acceso privado a SQL                                   | 0,43 €              |
+| **TOTAL**                                 |                                                         | **≈22,02 €**        |
+
+Importante: este total corresponde al **periodo de pruebas** concreto, no a un año entero estable. Si lo proyectases linealmente (solo como referencia):
+
+- 22,02 € en, por ejemplo, unas dos semanas de laboratorio intensivo → no es todavía un “mes típico”.  
+- Si supusieras un coste similar cada mes (laboratorio activo): podrías estar en el orden de **20–30 €/mes** para este entorno pequeño, es decir **240–360 €/año** solo en Azure (sin contar posibles ajustes de tamaño/tier).
+
+---
+
+## 5. Comparación funcional y de costes
+
+### 5.1. Funcionalidad
+
+- **On‑premise**  
+  - Control total del entorno, pero necesitas gestionar hardware, parches, copias, capacidad de almacenamiento y alta disponibilidad.  
+  - Escalar (añadir CPU/RAM, más almacenamiento, segundo host ESXi) implica inversión de capital (CAPEX) y planificación de compra.
+
+- **Azure**  
+  - App, base de datos, mensajería y almacenamiento se convierten en servicios gestionados (PaaS) con backup, actualización y alta disponibilidad “incluidos” en la plataforma.  
+  - Escalar es principalmente cambiar de tier o añadir instancias (OPEX puro): subir App Service Plan, subir DTU/vCore de SQL, etc.
+
+### 5.2. Costes: On‑Premise vs Azure (visión conceptual)
+
+| Aspecto               | On‑Premise (aprox.)                                | Azure (laboratorio actual)                              |
+|-----------------------|----------------------------------------------------|---------------------------------------------------------|
+| Coste anual directo   | 3.450–5.550 €/año (software + almacenamiento)      | Si extrapolamos: 240–360 €/año (solo consumo actual)    |
+| Tipo de gasto         | Mayormente CAPEX (licencias + hardware)           | OPEX (pago por uso mensual de servicios)               |
+| Alta disponibilidad   | Requiere más hosts/licencias (sube coste)         | Inherente a muchos servicios PaaS sin coste extra alto |
+| Escalado              | Comprar hardware/licencias nuevas                  | Cambiar tiers o ajustar tamaños                         |
+| Punto único de fallo  | Host ESXi / cabina                                | Azure gestiona redundancia de plataforma               |
+| Esfuerzo operativo    | Alto (patching, hardware, backups, pruebas DR)    | Más bajo (te centras en la app y datos)                 |
+
+En tu escenario de laboratorio, **Azure sale mucho más barato** porque:
+
+- No estás pagando licencias completas enterprise, sino consumo educativo reducido.  
+- No tienes costes de hardware ni de energía.  
+- Los servicios PaaS están en tiers básicos.
+
+En un entorno real de producción, la comparación exacta dependería de:
+
+- Volumen de usuarios, transacciones y datos.  
+- SLA requerido (9’s de disponibilidad).  
+- Necesidad de varias regiones, copias GRS, etc.
+
+Pero tu documentación ya transmite una idea clave que sí es trasladable a producción:  
+**On‑premise concentra muchos costes fijos (licencias + hardware + mantenimiento), mientras que en Azure puedes convertir casi todo en coste variable y controlable con Cost Management, tags y budgets.**
+
+Para preparar la defensa oral: ¿qué frase usarías tú para resumir en 10–15 segundos por qué, en este escenario, la arquitectura en Azure es más eficiente económicamente que mantener toda la solución solo on‑premise?
