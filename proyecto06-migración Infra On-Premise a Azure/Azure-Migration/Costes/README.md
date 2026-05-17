@@ -40,8 +40,8 @@ En el análisis detallado del grupo de recursos `lab-migration-onpremise` se obs
 
 Resumen del desglose (valores aproximados según el Cost Analysis):[file:176][file:177]
 
-| Servicio            | Recurso / Instancia                         | Coste estimado en el periodo |
-|---------------------|---------------------------------------------|------------------------------|
+| Servicio            | Recurso / Instancia                          | Coste estimado en el periodo |
+|---------------------|----------------------------------------------|------------------------------|
 | Azure App Service   | Plan básico B1 (`asp-labmigrationonpremise`)| ~0,06 €                      |
 | SQL Database        | `sqlsrv-reservas-lab` / `db-reservas`       | ~0,14 € (cada uno)           |
 | Storage             | `backupdbreservas` (File Share `shares`)    | <0,01 € – 0,04 €             |
