@@ -5,7 +5,7 @@
 1. [Infraestructura On‑Premise (técnica y funcional)](#1-infraestructura-on-premise-tecnica-y-funcional)  
 2. [Infraestructura en Azure (técnica y funcional)](#2-infraestructura-en-azure-tecnica-y-funcional)  
 3. [Costes On‑Premise: visión anual](#3-costes-on-premise-vision-anual)  
-4. [Costes en Azure: estimación anual](#4-costes-en-azure-estimacion-anual)  
+4. [Costes en Azure: estimación anual por servicios](#4-costes-en-azure-estimacion-anual-por-servicios)  
 5. [Comparación funcional y de costes](#5-comparacion-funcional-y-de-costes)
 
 ---
@@ -40,12 +40,11 @@ Arquitectónicamente, todo depende de uno o pocos hosts físicos y del almacenam
 
 ## 2. Infraestructura en Azure (técnica y funcional)
 
-En Azure has “troceado” esa infraestructura en servicios gestionados (PaaS/IaaS/híbridos):
+En Azure se ha “troceado” esa infraestructura en servicios gestionados (PaaS/IaaS/híbridos):
 
 - **Identidad y servidor de ficheros híbrido**  
   - AD on‑premise sigue existiendo, pero se integra con Azure Arc para gestión centralizada.  
   - La carpeta compartida `\\AD\shares` se sincroniza con un Azure File Share (`shares`) usando Azure File Sync, con backup gestionado en Azure.  
-  - Función: mantener la experiencia SMB local pero con resiliencia y backup en la nube.
 
 - **Capa de datos**  
   - La BD en SQL Server on‑premise se migra a Azure SQL Database (`db-reservas` en `sqlsrv-reservas-lab`).  
@@ -53,20 +52,18 @@ En Azure has “troceado” esa infraestructura en servicios gestionados (PaaS/I
 
 - **Capa de aplicación**  
   - La aplicación .NET pasa de VM/IIS a Azure App Service (`Ayacucho-Aventura`) sobre un App Service Plan B1.  
-  - Función: ejecutar la web de reservas sin administrar sistema operativo ni IIS, sólo el código.
 
 - **Mensajería**  
   - RabbitMQ se sustituye por Azure Service Bus (namespace `cola-reservas`, cola `servicebus`).  
-  - Función: cola de mensajes totalmente gestionada e integrada con la aplicación .NET.
 
 - **Perímetro y seguridad web**  
-  - La aplicación se publica a través de Azure Application Gateway + WAF, con listener HTTPS, terminación TLS, inspección WAF y una regla de rate limiting (10 peticiones/min por IP).  
+  - La aplicación se publica a través de Azure Application Gateway + WAF, con listener HTTPS, terminación TLS, inspección WAF y regla de rate limiting (10 peticiones/min por IP).  
   - El App Service sólo acepta tráfico que viene del Application Gateway (restricción de acceso).
 
 - **Gestión híbrida**  
   - El servidor AD on‑premise está registrado en Azure Arc, lo que permite aplicar políticas, monitorización y otras capacidades de Azure sobre el servidor local.
 
-En resumen: pasas de un entorno basado en VMs en un hipervisor a una arquitectura basada en servicios gestionados y sincronización híbrida, reduciendo la dependencia de hardware propio.
+En resumen: se pasa de un entorno basado en VMs sobre un hipervisor a una arquitectura basada en servicios gestionados y sincronización híbrida, reduciendo la dependencia de hardware propio.
 
 ---
 
@@ -74,25 +71,14 @@ En resumen: pasas de un entorno basado en VMs en un hipervisor a una arquitectur
 
 Para una empresa pequeña, el coste anual aproximado de software/licencias y almacenamiento es:
 
-- vSphere Essentials Kit (hipervisor y gestión)  
-  - **600–900 €/año**
-
-- Windows Server (3 VMs) + CAL de usuarios  
-  - Licencias Windows Server Standard (3 servidores): **900–1.500 €/año**  
-  - CAL de usuario para AD/shares (25 CAL): **300–600 €/año**
-
-- SQL Server 2022 Standard (4 cores)  
-  - **800–1.200 €/año**
-
-- Veeam Backup Essentials / por instancia  
-  - **700–1.000 €/año**
-
-- Almacenamiento local  
-  - Datastores ESXi (≈300 GB útiles): **50–150 €/año**  
-  - Repositorio de backups (≈1 TB): **100–200 €/año**
-
-- Ubuntu + RabbitMQ  
-  - Coste de licencia **0 €** (aunque hay coste de tiempo/soporte si se profesionaliza).
+- vSphere Essentials Kit (hipervisor y gestión): **600–900 €/año**  
+- Windows Server (3 VMs): **900–1.500 €/año**  
+- CAL de usuarios (25 CAL): **300–600 €/año**  
+- SQL Server 2022 Standard (4 cores): **800–1.200 €/año**  
+- Veeam Backup Essentials: **700–1.000 €/año**  
+- Almacenamiento local datastores ESXi (≈300 GB): **50–150 €/año**  
+- Almacenamiento para backups (≈1 TB): **100–200 €/año**  
+- Ubuntu + RabbitMQ: coste de licencia **0 €** (no incluye soporte/tiempo).
 
 **Total anual estimado on‑premise (software/licencias/almacenamiento):**  
 👉 Entre **3.450 y 5.550 € / año**  
@@ -100,31 +86,37 @@ Para una empresa pequeña, el coste anual aproximado de software/licencias y alm
 
 ---
 
-## 4. Costes en Azure: estimación anual
+## 4. Costes en Azure: estimación anual por servicios
 
-Entre el **11 y el 15** (5 días) el coste del Resource Group `lab-migration-onpremise` fue:
+Entre el 11 y el 15 (5 días) el coste del Resource Group `lab-migration-onpremise` fue **22,02 €**.  
+Si suponemos el mismo patrón de uso todos los días del año, proyectamos:
 
-- **Total periodo (5 días):** 22,02 €  
-  - Coste medio diario:  
-    - 22,02 € ÷ 5 ≈ **4,40 €/día**
+- Factor mensual (30 días): × 30 / 5 = × 6  
+- Factor anual (12 meses): × 72  
 
-### 4.1. Estimación mensual
+### 4.1. Estimación mensual y anual desglosada
 
-Suponiendo que el entorno se mantiene igual de activo todos los días del mes:
+| Servicio / Recurso                         | Coste 5 días | Coste mensual estimado (×6) | Coste anual estimado (×72) |
+|-------------------------------------------|-------------:|----------------------------:|----------------------------:|
+| Application Gateway `ayacucho.aventuras`  | 12,99 €      | ≈ 77,94 €                   | ≈ 935,28 €                  |
+| Application Gateway `ayacucho-aventuras`  | 3,24 €       | ≈ 19,44 €                   | ≈ 233,28 €                  |
+| App Service Plan `asp-labmigrationonpremise-9657` | 4,02 € | ≈ 24,12 €                   | ≈ 289,44 €                  |
+| SQL Server `server-reservas`              | 0,40 €       | ≈ 2,40 €                    | ≈ 28,80 €                   |
+| SQL Database `sqlsrv-reservas-lab / sql-db-reservas` | 0,14 € | ≈ 0,84 €          | ≈ 10,08 €                   |
+| Storage Account `backupdbreservas`        | 0,19 €       | ≈ 1,14 €                    | ≈ 13,68 €                   |
+| Azure Arc / HybridCompute `ad`            | 0,19 €       | ≈ 1,14 €                    | ≈ 13,68 €                   |
+| Public IP `pip-appgw`                     | 0,19 €       | ≈ 1,14 €                    | ≈ 13,68 €                   |
+| Private Endpoint `pe-sql`                 | 0,43 €       | ≈ 2,58 €                    | ≈ 30,96 €                   |
+| App Service Web App `ayacucho-aventura`   | 0,04 €       | ≈ 0,24 €                    | ≈ 2,88 €                    |
 
-- 4,40 €/día × 30 días ≈ **132 €/mes**
+**Suma anual aproximada con este patrón de uso:**  
+👉 ≈ **1.550–1.600 €/año**
 
-### 4.2. Estimación anual
+Se observa que:
 
-Proyectando ese patrón a un año completo:
-
-- 132 €/mes × 12 meses ≈ **1.584 €/año**
-
-Para no dar una cifra falsa de precisión, se puede redondear a un rango:
-
-👉 **Coste anual estimado en Azure con este diseño y uso actual: ~1.500–1.600 €/año**
-
-(Esto incluye principalmente Application Gateway + WAF, App Service Plan B1, SQL Database, Storage, Arc, IP pública y Private Endpoint).
+- El **Application Gateway** es el componente más caro (≈ 1.170 € sumando ambos gateways).  
+- El **App Service Plan** supone unos 290 €/año.  
+- SQL, Storage, Arc, IP y Private Endpoint tienen un coste relativamente bajo en comparación.
 
 ---
 
@@ -133,24 +125,22 @@ Para no dar una cifra falsa de precisión, se puede redondear a un rango:
 ### 5.1. Funcionalidad
 
 - **On‑premise**  
-  - Control total, pero la empresa asume hardware, licencias, parches, copias de seguridad, capacidad y alta disponibilidad.  
+  - Control total, pero la empresa asume hardware, licencias, parches, copias, capacidad y alta disponibilidad.  
   - Escalar implica CAPEX: comprar más servidores, almacenamiento, licencias, etc.
 
 - **Azure**  
-  - Las piezas críticas (app, datos, mensajería, ficheros) son servicios gestionados con HA, backup y actualizaciones incluidos.  
-  - Escalar es OPEX: cambiar tier de App Service, aumentar SQL, etc., sin invertir en hardware.
+  - Las piezas críticas (app, datos, mensajería, ficheros) son servicios gestionados con alta disponibilidad, backup y actualizaciones incluidos.  
+  - Escalar es OPEX: cambiar tiers o tamaño de los servicios, sin inversión en hardware.
 
 ### 5.2. Comparación de costes anuales (estimados)
 
-| Concepto               | On‑Premise                                      | Azure (estimación actual)         |
-|------------------------|-------------------------------------------------|-----------------------------------|
-| Coste anual directo    | 3.450–5.550 €/año                               | ~1.500–1.600 €/año                |
-| Tipo de gasto          | Principalmente CAPEX (licencias + hardware)     | OPEX (pago mensual por consumo)   |
+| Concepto               | On‑Premise                                      | Azure (estimación actual)                |
+|------------------------|-------------------------------------------------|------------------------------------------|
+| Coste anual directo    | 3.450–5.550 €/año                               | ~1.550–1.600 €/año                       |
+| Tipo de gasto          | Principalmente CAPEX (licencias + hardware)     | OPEX (pago mensual por consumo)          |
 | Costes ocultos         | Hardware, energía, climatización, averías       | Menos visibles (principalmente servicio) |
-| Escalado               | Lento, requiere compras y proyectos             | Rápido, cambio de tier/configuración |
-| Operación diaria       | Alta carga (patching SO, backups, DR tests)     | Menor carga (te centras en app/datos) |
+| Escalado               | Lento, requiere compras y proyectos             | Rápido, cambio de tier/configuración     |
+| Operación diaria       | Alta carga (patching, backups, pruebas DR)      | Menor carga (enfoque en app y datos)     |
 
 **Conclusión:**  
-En tu escenario, incluso con un Application Gateway relativamente caro para un lab, la arquitectura en Azure se sitúa en torno a **un 30–60 % más barata** que mantener toda la solución on‑premise solo en licencias y almacenamiento, además de simplificar operación, backup y escalado.  
-
-Si tuvieras que defender esto en 1 frase ante el tribunal, ¿cómo resumirías tú la diferencia clave entre pagar 3.500–5.500 €/año on‑premise frente a unos 1.500–1.600 €/año en Azure para esta solución híbrida?
+Con esta arquitectura, incluso con un Application Gateway relativamente caro para un laboratorio, la solución en Azure se sitúa alrededor de **un 30–60 % más barata** que mantener toda la solución sólo on‑premise en licencias y almacenamiento, y además simplifica operación, backup y escalado.
