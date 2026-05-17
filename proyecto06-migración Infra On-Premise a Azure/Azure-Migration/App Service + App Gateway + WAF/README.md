@@ -1,7 +1,7 @@
 ## Indice
 
 1. [Migración de la aplicación .NET a Azure App Service](#migracion-de-la-aplicacion-net-a-azure-app-service)
-2. [Publicación segura de la aplicación con Azure Application Gateway + WAF](#publicacion-segura-de-la-aplicacion-con-azure-application-gateway--waf)
+2. [Publicación segura de la aplicación con Azure Application Gateway + WAF](#publicacion-segura-de-la-aplicacion-con-azure-application-gateway-waf)
 
 ## Migración de la aplicación .NET a Azure App Service
 
