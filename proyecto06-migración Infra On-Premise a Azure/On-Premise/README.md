@@ -12,6 +12,21 @@
 | RabbitMQ / Docker    | 192.168.1.30     | Ubuntu Server + Docker    | Docker Engine, Contenedor RabbitMQ (build propio con Docker  
 | Veeam Backup Server  | 192.168.1.40     | Windows Server            | Veeam Backup & Replication, conexión a ESXi, agente Veeam en AD, repositorio local             | Backup de AD, shares, restauración granular, protección de datos    |
 
+# Coste de la infraestructura: 
+
+| Elemento                                           | Detalle (escenario empresa pequeña)                                   | Unidad / Cantidad    | Coste anual estimado (EUR) |
+|----------------------------------------------------|------------------------------------------------------------------------|-----------------------|----------------------------|
+| Licencia ESXi / vSphere                            | vSphere Essentials Kit (hasta 3 hosts) + soporte básico               | 1 kit                 | 600–900 €                  |
+| Licencias Windows Server (3 VMs)                   | 3 × Windows Server Standard (16 cores) amortizadas + soporte          | 3 servidores          | 900–1.500 €                |
+| Licencias de acceso de usuario (CAL AD)            | Windows Server CAL para usuarios que acceden a AD, shares, etc.       | 25 CAL de usuario     | 300–600 €                  |
+| SQL Server 2022 Standard                           | Licencia por 4 cores + soporte, amortizada a varios años              | 1 instancia (4 cores) | 800–1.200 €                |
+| Ubuntu Server + RabbitMQ                           | Software libre; sin soporte de pago                                   | 1 VM                  | 0 €                        |
+| Licencia de Veeam Backup                           | Veeam Essentials / per‑instance para hasta 6–10 cargas                | 1 licencia            | 700–1.000 €                |
+| Almacenamiento para datastores ESXi                | 300 GB útiles en cabina/NAS (parte proporcional de un equipo de 1–2 TB) | 300 GB                | 50–150 €                   |
+| Almacenamiento para backups (repositorio Veeam)    | Espacio en NAS/SAN para copias de la carpeta compartida y VMs         | 1 TB reservado        | 100–200 €                  |
+| **TOTAL ANUAL APROXIMADO**                         | Software (ESXi, Windows, SQL, Veeam, CALs) + almacenamiento            | —                     | **3.450–5.550 € / año**    |
+
+
 # Objetivo del proyecto
 
 Este proyecto simula una  infraestructura de empresa con:
