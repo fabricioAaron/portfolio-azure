@@ -1,6 +1,7 @@
 # Resumen global: Infraestructura On‑Premise vs Azure y comparación de costes
 
-<img width="1024" height="558" alt="image" src="https://github.com/user-attachments/assets/667d02fe-8933-4fcd-9bee-feae58314457" />
+<img width="2048" height="1116" alt="upscalemedia-transformed" src="https://github.com/user-attachments/assets/4f8c10ef-bdee-4a6f-8296-4a3314a085a9" />
+
 
 
 ## 📋 Índice
