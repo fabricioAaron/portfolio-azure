@@ -1,6 +1,5 @@
-# ==============================================================================
-# 1. GRUPO DE RECURSOS Y ETIQUETAS
-# ==============================================================================
+
+# 1. CREACIÓN DEL GRUPO DE RECURSOS 
 
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
@@ -8,9 +7,7 @@ resource "azurerm_resource_group" "rg" {
   tags     = var.tags
 }
 
-# ==============================================================================
-# 2. RED VIRTUAL (VNET Y SUBRED DE INTEGRACIÓN)
-# ==============================================================================
+# 2. RED VIRTUAL 
 
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-migration"
@@ -20,7 +17,7 @@ resource "azurerm_virtual_network" "vnet" {
   tags                = var.tags
 }
 
-# Subred con delegación para integración regional de App Service
+# Subred App Service
 resource "azurerm_subnet" "subnet_appservice" {
   name                 = "subnet-appservice"
   resource_group_name  = azurerm_resource_group.rg.name
@@ -36,16 +33,15 @@ resource "azurerm_subnet" "subnet_appservice" {
   }
 }
 
-# ==============================================================================
-# 3. CAPA DE APLICACIÓN: APP SERVICE PLAN Y WEB APP .NET 10.0
-# ==============================================================================
+
+# 3. CREACIÓN DEL APP SERVICE 
 
 resource "azurerm_service_plan" "app_plan" {
   name                = var.app_service_plan_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   os_type             = "Windows"
-  sku_name            = "B1" # Plan B1 (Basic, Small)
+  sku_name            = "B1" 
   tags                = var.tags
 }
 
