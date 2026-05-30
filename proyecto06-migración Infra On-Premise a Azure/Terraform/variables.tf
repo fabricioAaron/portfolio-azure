@@ -29,9 +29,3 @@ variable "app_service_name" {
   description = "Nombre único de la Web App en Azure App Service."
   default     = "Ayacucho-Aventura"
 }
-
-variable "subscription_id" {
-  type        = string
-  description = "ID de la suscripción de Azure para completar opcionalmente las rutas de importación de recursos."
-  default     = "00000000-0000-0000-0000-000000000000"
-}

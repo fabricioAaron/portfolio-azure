@@ -16,6 +16,3 @@ tags = {
 # Configuración de Capa de Aplicación
 app_service_plan_name = "asp-labmigrationonpremise-9657"
 app_service_name      = "Ayacucho-Aventura"
-
-# ID de la suscripción de Azure para completar las rutas de importación de recursos
-subscription_id       = "00000000-0000-0000-0000-000000000000"

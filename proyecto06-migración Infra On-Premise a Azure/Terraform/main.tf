@@ -71,23 +71,3 @@ resource "azurerm_app_service_virtual_network_swift_connection" "vnet_integratio
   app_service_id = azurerm_windows_web_app.app_service.id
   subnet_id      = azurerm_subnet.subnet_appservice.id
 }
-
-# ==============================================================================
-# 4. BLOQUES DE IMPORTACIÓN DIRECTA (TERRAFORM 1.5+)
-# ==============================================================================
-# Estos bloques vinculan tus recursos creados manualmente en el portal de Azure.
-
-import {
-  to = azurerm_resource_group.rg
-  id = "/subscriptions/${var.subscription_id}/resourceGroups/lab-migration-onpremise"
-}
-
-import {
-  to = azurerm_service_plan.app_plan
-  id = "/subscriptions/${var.subscription_id}/resourceGroups/lab-migration-onpremise/providers/Microsoft.Web/serverfarms/asp-labmigrationonpremise-9657"
-}
-
-import {
-  to = azurerm_windows_web_app.app_service
-  id = "/subscriptions/${var.subscription_id}/resourceGroups/lab-migration-onpremise/providers/Microsoft.Web/sites/Ayacucho-Aventura"
-}
