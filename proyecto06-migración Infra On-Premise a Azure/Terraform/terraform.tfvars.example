@@ -1,0 +1,21 @@
+# ==============================================================================
+# PLANTILLA DE CONFIGURACIÓN: RESOURCE GROUP, VNET Y APP SERVICE
+# ==============================================================================
+
+# Nombre del grupo de recursos existente o por crear
+resource_group_name   = "lab-migration-onpremise"
+
+# Región física de Azure para el despliegue (Central de España)
+location              = "spaincentral"
+
+# Nivel de tags para asignación de costes (FinOps)
+tags = {
+  departamento = "it"
+}
+
+# Configuración de Capa de Aplicación
+app_service_plan_name = "asp-labmigrationonpremise-9657"
+app_service_name      = "Ayacucho-Aventura"
+
+# ID de la suscripción de Azure para completar las rutas de importación de recursos
+subscription_id       = "00000000-0000-0000-0000-000000000000"
