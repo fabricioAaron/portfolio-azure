@@ -36,7 +36,8 @@ Esta práctica es básica en **FinOps** porque permite asignar el coste a un dep
 
 Con esta vista filtrada por la tag `departamento: it` se puede identificar con rapidez qué parte del coste corresponde a App Service, SQL, Storage, Service Bus o servicios de seguridad, y cómo evoluciona el consumo en el tiempo.
 
-<img width="1630" height="730" alt="cost analiys de grupo de recurso listo " src="https://github.com/user-attachments/assets/28e7cca7-7045-461b-a566-184036e0d7d0" />
+<img width="1611" height="839" alt="10" src="https://github.com/user-attachments/assets/3bd8d7b3-6d87-40d8-bf6c-b4f77cf4b08f" />
+
 
 `Cost Analysis filtrando por etiqueta`
 
@@ -105,12 +106,6 @@ En las evidencias de Cost Management y Budget se observa que:
 <img width="756" height="625" alt="imagen (1)" src="https://github.com/user-attachments/assets/337314ca-5957-4083-90a7-bff09febfa47" />
 
 `comprobamos que la alerta nos llegó a nuestro correo`
-
----
-
-<img width="1158" height="527" alt="imagen (2)" src="https://github.com/user-attachments/assets/298017b6-5cd1-439e-8bd9-60c8a1cb2fd8" />
-
-`cost analyst`
 
 ---
 
